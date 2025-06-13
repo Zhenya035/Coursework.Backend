@@ -9,4 +9,6 @@ public class Question
     public QuestionTypeEnum Type { get; set; }
     public string Description { get; set; } = string.Empty;
     public bool IsDisplayed { get; set; } = true;
+    
+    public Answer? Answer { get; set; }
 }

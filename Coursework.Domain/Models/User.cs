@@ -10,7 +10,6 @@ public class User
     public string Password { get; set; } = string.Empty;
     public StatusEnum Status { get; set; } = StatusEnum.Active;
     public RoleEnum Role { get; set; } = RoleEnum.User;
-    public List<Answer> Answers { get; set; } = [];
     public List<Comment> Comments { get; set; } = [];
     public List<Template> Templates { get; set; } = [];
     public List<Form> Forms { get; set; } = [];

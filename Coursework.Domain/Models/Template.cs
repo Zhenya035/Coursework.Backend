@@ -9,6 +9,8 @@ public class Template
     public List<Tag> Tags { get; set; } = [];
     public List<User> AuthorisedUsers { get; set; } = [];
     public List<Like> Likes { get; set; } = [];
+    public List<Comment> Comments { get; set; } = [];
+    public List<Form> Forms { get; set; } = [];
     public DateTime CreatedAt { get; set; } = DateTime.Now;
     public DateTime UpdatedAt { get; set; } = DateTime.Now;
     
