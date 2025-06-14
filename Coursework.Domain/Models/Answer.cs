@@ -9,5 +9,5 @@ public class Answer
     public uint FormId { get; set; }
     
     public Question? Question { get; set; }
-    public uint QuestionId { get; set; }
+    public uint? QuestionId { get; set; }
 }

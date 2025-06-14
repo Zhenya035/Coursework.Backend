@@ -11,5 +11,5 @@ public class Form
     public uint TemplateId { get; set; }
     
     public User? Author { get; set; }
-    public uint AuthorId { get; set; }
+    public uint? AuthorId { get; set; }
 }

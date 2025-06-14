@@ -7,7 +7,7 @@ public class Comment
     public DateTime CreatedAt { get; set; } = DateTime.Now;
     
     public User? Author { get; set; }
-    public uint AuthorId { get; set; }
+    public uint? AuthorId { get; set; }
     
     public Template? Template { get; set; }
     public uint TemplateId { get; set; }
