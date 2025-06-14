@@ -10,5 +10,8 @@ public class Question
     public string Description { get; set; } = string.Empty;
     public bool IsDisplayed { get; set; } = true;
     
-    public Answer? Answer { get; set; }
+    public List<Answer> Answers { get; set; } = [];
+    
+    public Template? Template { get; set; }
+    public uint TemplateId { get; set; }
 }
