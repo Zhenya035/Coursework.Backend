@@ -5,11 +5,12 @@ namespace Coursework.Application.Interfaces.Services;
 
 public interface IQuestionService
 {
-    public Task<List<GetQuestionDto>> GetAllQuestionsByTemplate(uint templateId);
-    public Task<GetQuestionDto> GetQuestionById(uint id);
-    public Task AddQuestion(AddQuestionDto question, uint templateId);
-    public Task UpdateQuestion(UpdateQuestionDto question, uint id);
-    public Task DeleteQuestion(uint id);
+    public Task<List<GetQuestionDto>> GetAllByTemplate(uint templateId);
+    public Task<GetQuestionDto> GetById(uint id);
+    public Task Add(AddQuestionDto question, uint templateId);
+    public Task Update(UpdateQuestionDto question, uint id);
+    public Task Delete(uint id);
     public Task MakeDisplay(uint id);
     public Task MakeNotDisplay(uint id);
+    public Task Exist(uint id);
 }

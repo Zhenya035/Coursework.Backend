@@ -10,4 +10,5 @@ public interface ICommentService
     public Task Add(AddCommentDto comment, uint templateId, uint authorId);
     public Task Update(string content, uint id);
     public Task Delete(uint id);
+    public Task Exist(uint id);
 }

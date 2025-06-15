@@ -5,9 +5,10 @@ namespace Coursework.Application.Interfaces.Services;
 
 public interface ITagService
 {
-    public Task<List<GetTagDto>> GetAllTags();
-    public Task<GetTagDto> GetTagById(int id);
+    public Task<List<GetTagDto>> GetAll();
+    public Task<GetTagDto> GetById(int id);
     public Task Add(AddTagDto tag);
     public Task Update(string name, uint id);
     public Task Delete(int id);
+    public Task Exist(uint id);
 }

@@ -5,11 +5,12 @@ namespace Coursework.Application.Interfaces.Services;
 
 public interface ITemplateService
 {
-    public Task<List<GetTemplateDto>> GetAllTemplates();
+    public Task<List<GetTemplateDto>> GetAll();
     public Task<GetTemplateDto> GetById(uint id);
-    public Task CreateTemplate(AddTemplateDto template, uint authorId);
-    public Task UpdateTemplate(UpdateTemplateDto template, uint id);
-    public Task DeleteTemplate(uint id);
+    public Task Create(AddTemplateDto template, uint authorId);
+    public Task Update(UpdateTemplateDto template, uint id);
+    public Task Delete(uint id);
     public Task AddAuthorizedUser(List<string> emails, uint templateId);
     public Task DeleteAuthorizedUser(List<string> emails, uint templateId);
+    public Task Exist(uint id);
 }

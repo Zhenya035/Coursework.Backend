@@ -5,14 +5,15 @@ namespace Coursework.Application.Interfaces.Services;
 
 public interface IUserService
 {
-    public Task<AuthorizationDto> RegisterUser(RegisterUserDto user);
-    public Task<AuthorizationDto> LoginUser(LoginUserDto user);
-    public Task<List<GetUserDto>> GetAllUsers();
+    public Task<AuthorizationDto> Register(RegisterUserDto user);
+    public Task<AuthorizationDto> Login(LoginUserDto user);
+    public Task<List<GetUserDto>> GetAll();
     public Task<GetUserDto> GetById(uint id);
-    public Task UpdateUser(string name, uint id);
-    public Task DeleteUser(uint id);
-    public Task BlockUser(uint id);
-    public Task UnBlockUser(uint id);
+    public Task Update(string name, uint id);
+    public Task Delete(uint id);
+    public Task Block(uint id);
+    public Task UnBlock(uint id);
     public Task MakeAdmin(uint id);
     public Task MakeUser(uint id);
+    public Task Exist(uint id);
 }
