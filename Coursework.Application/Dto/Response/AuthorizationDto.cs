@@ -1,4 +1,4 @@
-namespace Coursework.Application.Dto.Request.User;
+namespace Coursework.Application.Dto.Response;
 
 public class AuthorizationDto
 {
