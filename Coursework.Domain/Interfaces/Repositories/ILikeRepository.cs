@@ -4,6 +4,7 @@ namespace Coursework.Domain.Interfaces.Repositories;
 
 public interface ILikeRepository
 {
+    public Task<Like> GetById(uint id);
     public Task Add(Like like);
     public Task Delete(uint id);
 }
