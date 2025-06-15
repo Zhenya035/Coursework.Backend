@@ -7,4 +7,5 @@ public interface ILikeRepository
     public Task<Like> GetById(uint id);
     public Task Add(Like like);
     public Task Delete(uint id);
+    public Task Exist(uint id);
 }

@@ -44,4 +44,12 @@ public class CommentRepository(CourseworkDbContext context) : ICommentRepository
         await context.Comments
             .Where(c => c.Id == id)
             .ExecuteDeleteAsync();
+
+    public async Task Exist(uint id)
+    {
+        if (await context.Comments
+            .AsNoTracking()
+            .FirstOrDefaultAsync(c => c.Id == id) == null) 
+            throw new NotFoundException("Comment");
+    }
 }

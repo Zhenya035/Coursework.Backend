@@ -8,9 +8,9 @@ namespace Coursework.Infrastructure.Repositories;
 
 public class UserRepository(CourseworkDbContext context) : IUserRepository
 {
-    public async Task<User> RegisterUser(User user)
+    public async Task<User> Register(User user)
     {
-        var users = await GetAllUsers();
+        var users = await GetAll();
         
         if (users.Any(u => u.Email == user.Email))
             throw new AlreadyAddedException("User");
@@ -21,7 +21,7 @@ public class UserRepository(CourseworkDbContext context) : IUserRepository
         return newUser.Entity;
     }
 
-    public async Task<User> LoginUser(string email, string password)
+    public async Task<User> Login(string email, string password)
     {
         var user = await context.Users
             .AsNoTracking()
@@ -36,7 +36,7 @@ public class UserRepository(CourseworkDbContext context) : IUserRepository
         return user;
     }
 
-    public async Task<List<User>> GetAllUsers() =>
+    public async Task<List<User>> GetAll() =>
         await context.Users
             .AsNoTracking()
             .ToListAsync();
@@ -53,26 +53,26 @@ public class UserRepository(CourseworkDbContext context) : IUserRepository
         return user;
     }
 
-    public async Task UpdateUser(string name, uint id) =>
+    public async Task Update(string name, uint id) =>
         await context.Users
             .Where(u => u.Id == id)
             .ExecuteUpdateAsync(u => u
                 .SetProperty(u => u.Name, name)
             );
 
-    public async Task DeleteUser(uint id) =>
+    public async Task Delete(uint id) =>
         await context.Users
             .Where(u => u.Id == id)
             .ExecuteDeleteAsync();
 
-    public async Task BlockUser(uint id) =>
+    public async Task Block(uint id) =>
         await context.Users
             .Where(u => u.Id == id)
             .ExecuteUpdateAsync(u => u
                 .SetProperty(u => u.Status, StatusEnum.Blocked)
             );
 
-    public async Task UnBlockUser(uint id) =>
+    public async Task UnBlock(uint id) =>
         await context.Users
             .Where(u => u.Id == id)
             .ExecuteUpdateAsync(u => u
@@ -92,4 +92,12 @@ public class UserRepository(CourseworkDbContext context) : IUserRepository
             .ExecuteUpdateAsync(u => u
                 .SetProperty(u => u.Role, RoleEnum.User)
             );
+
+    public async Task Exist(uint id)
+    {
+        if (await context.Users
+                .AsNoTracking()
+                .FirstOrDefaultAsync(c => c.Id == id) == null) 
+            throw new NotFoundException("User");
+    }
 }

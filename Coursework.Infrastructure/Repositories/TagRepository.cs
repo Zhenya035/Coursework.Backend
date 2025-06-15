@@ -7,10 +7,10 @@ namespace Coursework.Infrastructure.Repositories;
 
 public class TagRepository(CourseworkDbContext context) : ITagRepository
 {
-    public async Task<List<Tag>> GetAllTags() =>
+    public async Task<List<Tag>> GetAll() =>
         await context.Tags.AsNoTracking().ToListAsync();
 
-    public async Task<Tag> GetTagById(int id)
+    public async Task<Tag> GetById(int id)
     {
         var tag = await context.Tags
             .AsNoTracking()
@@ -39,4 +39,12 @@ public class TagRepository(CourseworkDbContext context) : ITagRepository
         await context.Tags
             .Where(t => t.Id == id)
             .ExecuteDeleteAsync();
+
+    public async Task Exist(uint id)
+    {
+        if (await context.Tags
+                .AsNoTracking()
+                .FirstOrDefaultAsync(c => c.Id == id) == null) 
+            throw new NotFoundException("Tag");
+    }
 }

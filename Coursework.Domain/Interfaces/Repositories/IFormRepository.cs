@@ -6,7 +6,8 @@ public interface IFormRepository
 {
     public Task<List<Form>> GetAllByTemplate(uint templateId);
     public Task<Form> GetById(uint id);
-    public Task FillForm(Form form);
-    public Task EditForm(Form form, List<Answer> answers);
-    public Task DeleteForm(uint id);
+    public Task Fill(Form form);
+    public Task Edit(Form form, List<Answer> answers);
+    public Task Delete(uint id);
+    public Task Exist(uint id);
 }

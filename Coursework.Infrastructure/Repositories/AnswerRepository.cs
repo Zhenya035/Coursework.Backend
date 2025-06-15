@@ -27,21 +27,29 @@ public class AnswerRepository(CourseworkDbContext context) : IAnswerRepository
         return answer;
     }
 
-    public async Task CreateAnswer(Answer answer)
+    public async Task Create(Answer answer)
     {
         await context.Answers.AddAsync(answer);
         await context.SaveChangesAsync();
     }
 
-    public async Task UpdateAnswer(string newValue, uint id) =>
+    public async Task Update(string newValue, uint id) =>
         await context.Answers
             .Where(a => a.Id == id)
             .ExecuteUpdateAsync(a => a
                 .SetProperty(a => a.Value, newValue)
             );
 
-    public async Task DeleteAnswer(uint id) => 
+    public async Task Delete(uint id) => 
         await context.Answers
             .Where(a => a.Id == id)
             .ExecuteDeleteAsync();
+
+    public async Task Exist(uint id)
+    {
+        if (await context.Answers
+            .AsNoTracking()
+            .FirstOrDefaultAsync(a => a.Id == id) == null) 
+            throw new NotFoundException("Answer");   
+    }
 }

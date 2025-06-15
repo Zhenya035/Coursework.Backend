@@ -29,13 +29,13 @@ public class FormRepository(CourseworkDbContext context) : IFormRepository
         return form;
     }
 
-    public async Task FillForm(Form form)
+    public async Task Fill(Form form)
     {
         await context.Forms.AddAsync(form);
         await context.SaveChangesAsync();
     }
 
-    public async Task EditForm(Form form, List<Answer> answers)
+    public async Task Edit(Form form, List<Answer> answers)
     {
         form.Answers.Clear();
         form.Answers.AddRange(answers);
@@ -43,7 +43,7 @@ public class FormRepository(CourseworkDbContext context) : IFormRepository
         await context.SaveChangesAsync();
     }
 
-    public async Task DeleteForm(uint id)
+    public async Task Delete(uint id)
     {
         var form = await context.Forms
             .AsNoTracking()
@@ -55,5 +55,13 @@ public class FormRepository(CourseworkDbContext context) : IFormRepository
         await context.Forms
             .Where(f => f.Id == id)
             .ExecuteDeleteAsync();
+    }
+
+    public async Task Exist(uint id)
+    {
+        if (await context.Forms
+                .AsNoTracking()
+                .FirstOrDefaultAsync(c => c.Id == id) == null) 
+            throw new NotFoundException("Form");
     }
 }

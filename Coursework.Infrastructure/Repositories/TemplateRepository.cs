@@ -7,7 +7,7 @@ namespace Coursework.Infrastructure.Repositories;
 
 public class TemplateRepository(CourseworkDbContext context) : ITemplateRepository
 {
-    public async Task<List<Template>> GetAllTemplates() =>
+    public async Task<List<Template>> GetAll() =>
         await context.Templates.AsNoTracking().ToListAsync();
 
     public async Task<Template> GetById(uint id)
@@ -22,13 +22,13 @@ public class TemplateRepository(CourseworkDbContext context) : ITemplateReposito
         return template;
     }
 
-    public async Task CreateTemplate(Template template)
+    public async Task Create(Template template)
     {
         await context.Templates.AddAsync(template);
         await context.SaveChangesAsync();
     }
 
-    public async Task UpdateTemplate(Template template, uint id) =>
+    public async Task Update(Template template, uint id) =>
         await context.Templates
             .Where(t => t.Id == id)
             .ExecuteUpdateAsync(t => t
@@ -38,7 +38,7 @@ public class TemplateRepository(CourseworkDbContext context) : ITemplateReposito
                 .SetProperty(t => t.UpdatedAt, DateTime.UtcNow)
             );
 
-    public async Task DeleteTemplate(uint id) =>
+    public async Task Delete(uint id) =>
         await context.Templates
             .Where(t => t.Id == id)
             .ExecuteDeleteAsync();
@@ -57,5 +57,13 @@ public class TemplateRepository(CourseworkDbContext context) : ITemplateReposito
     {
         template.AuthorisedEmails.RemoveAll(emails.Contains);
         await context.SaveChangesAsync();
+    }
+
+    public async Task Exist(uint id)
+    {
+        if (await context.Templates
+                .AsNoTracking()
+                .FirstOrDefaultAsync(c => c.Id == id) == null) 
+            throw new NotFoundException("Template");
     }
 }

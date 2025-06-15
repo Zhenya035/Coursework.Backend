@@ -31,4 +31,12 @@ public class LikeRepository(CourseworkDbContext context) : ILikeRepository
             .Where(l => l.Id == id)
             .ExecuteDeleteAsync();
     }
+
+    public async Task Exist(uint id)
+    {
+        if (await context.Likes
+                .AsNoTracking()
+                .FirstOrDefaultAsync(c => c.Id == id) == null) 
+            throw new NotFoundException("Like");
+    }
 }
