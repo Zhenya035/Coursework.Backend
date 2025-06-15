@@ -4,7 +4,7 @@ public class Comment
 {
     public uint Id { get; set; }
     public string Content { get; set; } = string.Empty;
-    public DateTime CreatedAt { get; set; } = DateTime.Now;
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     
     public User? Author { get; set; }
     public uint? AuthorId { get; set; }
