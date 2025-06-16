@@ -15,8 +15,13 @@ builder.Services.AddDbContext<CourseworkDbContext>(options =>
 builder.Services.AddRepositories();
 builder.Services.AddServices();
 
+builder.Services.AddJwtTokens(configuration);
+
 var app = builder.Build();
 
 app.UseMiddleware<ExceptionHandlerMiddleware>();
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.Run();

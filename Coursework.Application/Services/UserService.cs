@@ -1,5 +1,6 @@
 using Coursework.Application.Dto.Request.User;
 using Coursework.Application.Dto.Response;
+using Coursework.Application.Interfaces.Jwt;
 using Coursework.Application.Interfaces.Services;
 using Coursework.Application.Mapping;
 using Coursework.Domain.Exceptions;
@@ -7,7 +8,7 @@ using Coursework.Domain.Interfaces.Repositories;
 
 namespace Coursework.Application.Services;
 
-public class UserService(IUserRepository repository) : IUserService
+public class UserService(IUserRepository repository, IJwtService jwtService) : IUserService
 {
     public async Task<AuthorizationDto> Register(RegisterUserDto user)
     {
@@ -26,10 +27,12 @@ public class UserService(IUserRepository repository) : IUserService
         
         newUser = await repository.Register(newUser);
 
+        var token = jwtService.GenerateToken(newUser);
+        
         var response = new AuthorizationDto()
         {
             Id = newUser.Id,
-            Token = "",
+            Token = token,
         };
         
         return response;
@@ -52,10 +55,12 @@ public class UserService(IUserRepository repository) : IUserService
         if (!BCrypt.Net.BCrypt.Verify(loginUser.Password, user.Password))
             throw new InvalidPasswordException();
         
+        var token = jwtService.GenerateToken(user);
+        
         var response = new AuthorizationDto()
         {
             Id = user.Id,
-            Token = "",
+            Token = token,
         };
         
         return response;
