@@ -6,12 +6,18 @@ namespace Coursework.Application.Mapping;
 
 public static class UserMapping
 {
-    public static User FromLoginDto(RegisterUserDto registerDto) =>
+    public static User FromLoginDto(LoginUserDto loginDto) =>
+        new User()
+        {
+            Email = loginDto.Email,
+            Password = loginDto.Password
+        };
+    
+    public static User FromRegistrationDto(RegisterUserDto registerDto) =>
         new User()
         {
             Name = registerDto.Name,
-            Email = registerDto.Email,
-            Password = registerDto.Password
+            Email = registerDto.Email
         };
 
     public static GetUserDto ToGetUserDto(User user) =>

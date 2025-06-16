@@ -14,6 +14,15 @@ public static class TemplateMapping
             Images = addTemplateDto.Images,
             AuthorisedEmails = addTemplateDto.AuthorisedEmails
         };
+    
+    public static Template FromUpdateTemplateDto(UpdateTemplateDto updateTemplateDto) =>
+        new Template()
+        {
+            Title = updateTemplateDto.Title,
+            Description = updateTemplateDto.Description,
+            Images = updateTemplateDto.Images,
+            UpdatedAt = updateTemplateDto.UpdatedAt
+        };
 
     public static GetTemplateDto ToGetTemplateDto(Template template) =>
         new GetTemplateDto()

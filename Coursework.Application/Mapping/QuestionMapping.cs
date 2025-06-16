@@ -14,6 +14,14 @@ public static class QuestionMapping
             Description = addQuestionDto.Description,
             IsDisplayed = addQuestionDto.IsDisplayed
         };
+    
+    public static Question FromUpdateQuestionDto(UpdateQuestionDto updateQuestionDto) =>
+        new Question()
+        {
+            Name = updateQuestionDto.Name,
+            Type = updateQuestionDto.Type,
+            Description = updateQuestionDto.Description
+        };
 
     public static GetQuestionDto ToGetQuestionDto(this Question question) =>
         new GetQuestionDto()
