@@ -9,5 +9,5 @@ public interface ICommentRepository
     public Task Add(Comment comment);
     public Task Update(string content, uint id);
     public Task Delete(uint id);
-    public Task Exist(uint id);
+    public Task<bool> Exist(uint id);
 }

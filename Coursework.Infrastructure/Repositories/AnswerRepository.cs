@@ -1,4 +1,3 @@
-using Coursework.Domain.Exceptions;
 using Coursework.Domain.Interfaces.Repositories;
 using Coursework.Domain.Models;
 using Microsoft.EntityFrameworkCore;
@@ -19,10 +18,8 @@ public class AnswerRepository(CourseworkDbContext context) : IAnswerRepository
     {
         var answer = await context.Answers
             .AsNoTracking()
-            .FirstOrDefaultAsync(a => a.Id == id);
-        
-        if(answer == null)
-            throw new NotFoundException("answer");
+            .Include(a => a.Question)
+            .FirstAsync(a => a.Id == id);
         
         return answer;
     }
@@ -45,11 +42,8 @@ public class AnswerRepository(CourseworkDbContext context) : IAnswerRepository
             .Where(a => a.Id == id)
             .ExecuteDeleteAsync();
 
-    public async Task Exist(uint id)
-    {
-        if (await context.Answers
+    public async Task<bool> Exist(uint id) =>
+        await context.Answers
             .AsNoTracking()
-            .FirstOrDefaultAsync(a => a.Id == id) == null) 
-            throw new NotFoundException("Answer");   
-    }
+            .FirstOrDefaultAsync(a => a.Id == id) != null;
 }

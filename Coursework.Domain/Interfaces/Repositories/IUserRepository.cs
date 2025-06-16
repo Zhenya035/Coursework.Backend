@@ -5,7 +5,7 @@ namespace Coursework.Domain.Interfaces.Repositories;
 public interface IUserRepository
 {
     public Task<User> Register(User user);
-    public Task<User> Login(string email, string password);
+    public Task<User?> GetByEmail(string email);
     public Task<List<User>> GetAll();
     public Task<User> GetById(uint id);
     public Task Update(string name, uint id);
@@ -14,5 +14,7 @@ public interface IUserRepository
     public Task UnBlock(uint id);
     public Task MakeAdmin(uint id);
     public Task MakeUser(uint id);
-    public Task Exist(uint id);
+    public Task<bool> Exist(uint id);
+    
+    public Task<bool> Exist(string email);
 }

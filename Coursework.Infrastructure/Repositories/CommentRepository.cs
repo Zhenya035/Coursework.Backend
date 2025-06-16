@@ -1,4 +1,3 @@
-using Coursework.Domain.Exceptions;
 using Coursework.Domain.Interfaces.Repositories;
 using Coursework.Domain.Models;
 using Microsoft.EntityFrameworkCore;
@@ -19,10 +18,8 @@ public class CommentRepository(CourseworkDbContext context) : ICommentRepository
     {
         var comment = await context.Comments
             .AsNoTracking()
-            .FirstOrDefaultAsync(c => c.Id == id);
-        
-        if(comment == null)
-            throw new NotFoundException("Comment");
+            .Include(c => c.Author)
+            .FirstAsync(c => c.Id == id);
         
         return comment;
     }
@@ -45,11 +42,8 @@ public class CommentRepository(CourseworkDbContext context) : ICommentRepository
             .Where(c => c.Id == id)
             .ExecuteDeleteAsync();
 
-    public async Task Exist(uint id)
-    {
-        if (await context.Comments
+    public async Task<bool> Exist(uint id) =>
+        await context.Comments
             .AsNoTracking()
-            .FirstOrDefaultAsync(c => c.Id == id) == null) 
-            throw new NotFoundException("Comment");
-    }
+            .FirstOrDefaultAsync(c => c.Id == id) != null;
 }

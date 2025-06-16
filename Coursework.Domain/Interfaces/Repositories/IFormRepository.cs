@@ -9,5 +9,5 @@ public interface IFormRepository
     public Task Fill(Form form);
     public Task Edit(Form form, List<Answer> answers);
     public Task Delete(uint id);
-    public Task Exist(uint id);
+    public Task<bool> Exist(uint id);
 }

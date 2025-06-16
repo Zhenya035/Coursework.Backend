@@ -1,3 +1,4 @@
+using Coursework.Domain.Enums;
 using Coursework.Domain.Models;
 
 namespace Coursework.Domain.Interfaces.Repositories;
@@ -11,5 +12,6 @@ public interface IQuestionRepository
     public Task Delete(uint id);
     public Task MakeDisplay(uint id);
     public Task MakeNotDisplay(uint id);
-    public Task Exist(uint id);
+    public Task<bool> Exist(uint id);
+    public Task<bool> Exist(string name, string description, QuestionTypeEnum type);
 }

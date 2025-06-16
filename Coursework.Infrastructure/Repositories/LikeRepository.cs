@@ -1,4 +1,3 @@
-using Coursework.Domain.Exceptions;
 using Coursework.Domain.Interfaces.Repositories;
 using Coursework.Domain.Models;
 using Microsoft.EntityFrameworkCore;
@@ -11,10 +10,9 @@ public class LikeRepository(CourseworkDbContext context) : ILikeRepository
     {
         var like = await context.Likes
             .AsNoTracking()
-            .FirstOrDefaultAsync(l => l.Id == id);
-
-        if (like == null)
-            throw new NotFoundException("Like");
+            .Include(l => l.Template)
+            .Include(l => l.Author)
+            .FirstAsync(l => l.Id == id);
 
         return like;
     }
@@ -25,18 +23,18 @@ public class LikeRepository(CourseworkDbContext context) : ILikeRepository
         await context.SaveChangesAsync();
     }
 
-    public async Task Delete(uint id)
-    {
+    public async Task Delete(uint id) =>
         await context.Likes
             .Where(l => l.Id == id)
             .ExecuteDeleteAsync();
-    }
 
-    public async Task Exist(uint id)
-    {
-        if (await context.Likes
-                .AsNoTracking()
-                .FirstOrDefaultAsync(c => c.Id == id) == null) 
-            throw new NotFoundException("Like");
-    }
+    public async Task<bool> Exist(uint id) =>
+        await context.Likes
+            .AsNoTracking()
+            .FirstOrDefaultAsync(c => c.Id == id) != null;
+
+    public async Task<bool> Exist(uint authorId, uint templateId) =>
+        await context.Likes
+            .AsNoTracking()
+            .FirstOrDefaultAsync(l => l.AuthorId == authorId && l.TemplateId == templateId) != null;
 }

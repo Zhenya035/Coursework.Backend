@@ -7,13 +7,24 @@ namespace Coursework.Infrastructure.Repositories;
 
 public class TemplateRepository(CourseworkDbContext context) : ITemplateRepository
 {
-    public async Task<List<Template>> GetAll() =>
-        await context.Templates.AsNoTracking().ToListAsync();
+    public async Task<List<Template>> GetAll(string email) =>
+        await context.Templates
+            .AsNoTracking()
+            .Where(t => t.AuthorisedEmails.Count == 0 || t.AuthorisedEmails.Contains(email))
+            .ToListAsync();
 
     public async Task<Template> GetById(uint id)
     {
         var template = await context.Templates
             .AsNoTracking()
+            .FirstAsync(t => t.Id == id);
+        
+        return template;
+    }
+
+    public async Task<Template> GetByIdForAuthorizedUser(uint id)
+    {
+        var template = await context.Templates
             .FirstOrDefaultAsync(t => t.Id == id);
         
         if(template == null)
@@ -59,11 +70,13 @@ public class TemplateRepository(CourseworkDbContext context) : ITemplateReposito
         await context.SaveChangesAsync();
     }
 
-    public async Task Exist(uint id)
-    {
-        if (await context.Templates
-                .AsNoTracking()
-                .FirstOrDefaultAsync(c => c.Id == id) == null) 
-            throw new NotFoundException("Template");
-    }
+    public async Task<bool> Exist(uint id) => 
+        await context.Templates
+            .AsNoTracking()
+            .FirstOrDefaultAsync(c => c.Id == id) != null;
+    
+    public async Task<bool> Exist(string title) => 
+        await context.Templates
+            .AsNoTracking()
+            .FirstOrDefaultAsync(c => c.Title == title) != null;
 }

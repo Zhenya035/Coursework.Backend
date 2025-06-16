@@ -1,4 +1,4 @@
-using Coursework.Domain.Exceptions;
+using Coursework.Domain.Enums;
 using Coursework.Domain.Interfaces.Repositories;
 using Coursework.Domain.Models;
 using Microsoft.EntityFrameworkCore;
@@ -17,10 +17,7 @@ public class QuestionRepository(CourseworkDbContext context) : IQuestionReposito
     {
         var question = await context.Questions
             .AsNoTracking()
-            .FirstOrDefaultAsync(q => q.Id == id);
-        
-        if(question == null)
-            throw new NotFoundException("Question");
+            .FirstAsync(q => q.Id == id);
         
         return question;
     }
@@ -59,11 +56,14 @@ public class QuestionRepository(CourseworkDbContext context) : IQuestionReposito
                 .SetProperty(q => q.IsDisplayed, false)
             );
 
-    public async Task Exist(uint id)
-    {
-        if (await context.Questions
-                .AsNoTracking()
-                .FirstOrDefaultAsync(c => c.Id == id) == null) 
-            throw new NotFoundException("Question");
-    }
+    public async Task<bool> Exist(uint id) =>
+        await context.Questions
+            .AsNoTracking()
+            .FirstOrDefaultAsync(c => c.Id == id) != null;
+
+    public async Task<bool> Exist(string name, string description, QuestionTypeEnum type) =>
+        await context.Questions
+            .AsNoTracking()
+            .FirstOrDefaultAsync(c => c.Name == name && c.Description == description &&
+                                      c.Type == type) != null;
 }

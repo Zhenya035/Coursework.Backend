@@ -1,5 +1,4 @@
 using Coursework.Domain.Enums;
-using Coursework.Domain.Exceptions;
 using Coursework.Domain.Interfaces.Repositories;
 using Coursework.Domain.Models;
 using Microsoft.EntityFrameworkCore;
@@ -10,28 +9,17 @@ public class UserRepository(CourseworkDbContext context) : IUserRepository
 {
     public async Task<User> Register(User user)
     {
-        var users = await GetAll();
-        
-        if (users.Any(u => u.Email == user.Email))
-            throw new AlreadyAddedException("User");
-        
         var newUser = await context.Users.AddAsync(user);
         await context.SaveChangesAsync();
         
         return newUser.Entity;
     }
 
-    public async Task<User> Login(string email, string password)
+    public async Task<User?> GetByEmail(string email)
     {
         var user = await context.Users
             .AsNoTracking()
             .FirstOrDefaultAsync(u => u.Email == email);
-        
-        if(user == null)
-            throw new NotFoundException("User");
-
-        if (!BCrypt.Net.BCrypt.Verify(password, user.Password))
-            throw new InvalidPasswordException();
         
         return user;
     }
@@ -46,9 +34,6 @@ public class UserRepository(CourseworkDbContext context) : IUserRepository
         var user = await context.Users
             .AsNoTracking()
             .FirstOrDefaultAsync(u => u.Id == id);
-        
-        if(user == null)
-            throw new NotFoundException("User");
         
         return user;
     }
@@ -93,11 +78,13 @@ public class UserRepository(CourseworkDbContext context) : IUserRepository
                 .SetProperty(u => u.Role, RoleEnum.User)
             );
 
-    public async Task Exist(uint id)
-    {
-        if (await context.Users
-                .AsNoTracking()
-                .FirstOrDefaultAsync(c => c.Id == id) == null) 
-            throw new NotFoundException("User");
-    }
+    public async Task<bool> Exist(uint id) =>
+        await context.Users
+            .AsNoTracking()
+            .FirstOrDefaultAsync(c => c.Id == id) != null;
+    
+    public async Task<bool> Exist(string email) =>
+        await context.Users
+            .AsNoTracking()
+            .FirstOrDefaultAsync(c => c.Email == email) != null;
 }

@@ -1,4 +1,3 @@
-using Coursework.Domain.Exceptions;
 using Coursework.Domain.Interfaces.Repositories;
 using Coursework.Domain.Models;
 using Microsoft.EntityFrameworkCore;
@@ -10,14 +9,11 @@ public class TagRepository(CourseworkDbContext context) : ITagRepository
     public async Task<List<Tag>> GetAll() =>
         await context.Tags.AsNoTracking().ToListAsync();
 
-    public async Task<Tag> GetById(int id)
+    public async Task<Tag> GetById(uint id)
     {
         var tag = await context.Tags
             .AsNoTracking()
-            .FirstOrDefaultAsync(t => t.Id == id);
-
-        if (tag == null)
-            throw new NotFoundException("Tag");
+            .FirstAsync(t => t.Id == id);
         
         return tag;
     }
@@ -35,16 +31,19 @@ public class TagRepository(CourseworkDbContext context) : ITagRepository
                 .SetProperty(t => t.Name, name)
             );
 
-    public async Task Delete(int id) =>
+    public async Task Delete(uint id) =>
         await context.Tags
             .Where(t => t.Id == id)
             .ExecuteDeleteAsync();
 
-    public async Task Exist(uint id)
-    {
-        if (await context.Tags
-                .AsNoTracking()
-                .FirstOrDefaultAsync(c => c.Id == id) == null) 
-            throw new NotFoundException("Tag");
-    }
+    public async Task<bool> Exist(uint id) =>
+        await context.Tags
+            .AsNoTracking()
+            .FirstOrDefaultAsync(t => t.Id == id) != null;
+
+    public async Task<bool> Exist(string name) =>
+        await context.Tags
+            .AsNoTracking()
+            .FirstOrDefaultAsync(t => t.Name == name) != null;
+
 }

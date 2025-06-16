@@ -1,4 +1,3 @@
-using Coursework.Domain.Exceptions;
 using Coursework.Domain.Interfaces.Repositories;
 using Coursework.Domain.Models;
 using Microsoft.EntityFrameworkCore;
@@ -11,6 +10,8 @@ public class FormRepository(CourseworkDbContext context) : IFormRepository
         await context.Forms
             .AsNoTracking()
             .Where(f => f.TemplateId == templateId)
+            .Include(f => f.Template)
+            .Include(f => f.Author)
             .Include(f => f.Answers)
                 .ThenInclude(a => a.Question)
             .ToListAsync();
@@ -19,12 +20,11 @@ public class FormRepository(CourseworkDbContext context) : IFormRepository
     {
         var form = await context.Forms
             .AsNoTracking()
+            .Include(f => f.Template)
+            .Include(f => f.Author)
             .Include(f => f.Answers)
                 .ThenInclude(a => a.Question)
-            .FirstOrDefaultAsync(f => f.Id == id);
-
-        if (form == null)
-            throw new NotFoundException("form");
+            .FirstAsync(f => f.Id == id);
 
         return form;
     }
@@ -45,23 +45,13 @@ public class FormRepository(CourseworkDbContext context) : IFormRepository
 
     public async Task Delete(uint id)
     {
-        var form = await context.Forms
-            .AsNoTracking()
-            .FirstOrDefaultAsync(f => f.Id == id);
-        
-        if(form == null)
-            throw new NotFoundException("form");
-        
         await context.Forms
             .Where(f => f.Id == id)
             .ExecuteDeleteAsync();
     }
 
-    public async Task Exist(uint id)
-    {
-        if (await context.Forms
-                .AsNoTracking()
-                .FirstOrDefaultAsync(c => c.Id == id) == null) 
-            throw new NotFoundException("Form");
-    }
+    public async Task<bool> Exist(uint id) =>
+        await context.Forms
+            .AsNoTracking()
+            .FirstOrDefaultAsync(c => c.Id == id) != null;
 }

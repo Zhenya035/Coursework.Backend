@@ -9,5 +9,5 @@ public interface IAnswerRepository
     public Task Create(Answer answer);
     public Task Update(string newValue, uint id);
     public Task Delete(uint id);
-    public Task Exist(uint id);
+    public Task<bool> Exist(uint id);
 }
