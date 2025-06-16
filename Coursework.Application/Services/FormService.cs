@@ -29,8 +29,8 @@ public class FormService(
         
         return FormMapping.ToGetFormDto(await repository.GetById(id));
     }
-    
-    public async Task<Form> GetByIdWithoutMapping(uint id)
+
+    private async Task<Form> GetByIdWithoutMapping(uint id)
     {
         await Exist(id);
         
@@ -39,6 +39,9 @@ public class FormService(
 
     public async Task Fill(AddFormDto form, uint templateId, uint authorId)
     {
+        if(form == null)
+            throw new InvalidInputDataException("Transmitted form can't be null");
+        
         if (form.AnswerIds.Count == 0)
             throw new InvalidInputDataException("Answer Ids are required");
         
@@ -86,6 +89,7 @@ public class FormService(
 
     public async Task Exist(uint id)
     {
-        await repository.Exist(id);
+        if(!await repository.Exist(id))
+            throw new NotFoundException("Form");
     }
 }

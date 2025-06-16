@@ -5,7 +5,7 @@ namespace Coursework.Application.Interfaces.Services;
 
 public interface ITemplateService
 {
-    public Task<List<GetTemplateDto>> GetAll();
+    public Task<List<GetTemplateDto>> GetAll(string email);
     public Task<GetTemplateDto> GetById(uint id);
     public Task Create(AddTemplateDto template, uint authorId);
     public Task Update(UpdateTemplateDto template, uint id);

@@ -7,7 +7,10 @@ using Coursework.Domain.Interfaces.Repositories;
 
 namespace Coursework.Application.Services;
 
-public class CommentService(ICommentRepository repository, ITemplateService templateService, IUserService userService) : ICommentService
+public class CommentService(
+    ICommentRepository repository,
+    ITemplateService templateService,
+    IUserService userService) : ICommentService
 {
     public async Task<List<GetCommentDto>> GetAllByTemplate(uint templateId)
     {
@@ -27,6 +30,9 @@ public class CommentService(ICommentRepository repository, ITemplateService temp
 
     public async Task Add(AddCommentDto comment, uint templateId, uint authorId)
     {
+        if(comment == null)
+            throw new InvalidDataException("Transient comment can't be null");
+        
         if (comment.Content != string.Empty)
             throw new InvalidInputDataException("Comment content can't be empty.");
         
@@ -57,6 +63,9 @@ public class CommentService(ICommentRepository repository, ITemplateService temp
         await repository.Delete(id);
     }
 
-    public async Task Exist(uint id) =>
-        await repository.Exist(id);
+    public async Task Exist(uint id)
+    {
+        if(!await repository.Exist(id))
+            throw new NotFoundException("Comment");
+    }
 }

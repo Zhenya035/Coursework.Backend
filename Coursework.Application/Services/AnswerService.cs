@@ -8,11 +8,15 @@ using Coursework.Domain.Models;
 
 namespace Coursework.Application.Services;
 
-public class AnswerService(IAnswerRepository repository, IFormService formService, IQuestionService questionService) : IAnswerService
+public class AnswerService(
+    IAnswerRepository repository,
+    IFormService formService,
+    IQuestionService questionService) : IAnswerService
 {
     public async Task<List<GetAnswerDto>> GetAllByForm(uint formId)
     {
         await formService.Exist(formId);
+        
         var answers = await repository.GetAllByForm(formId);
         return answers.Select(AnswerMapping.ToGetAnswerDto).ToList();
     }
@@ -24,14 +28,21 @@ public class AnswerService(IAnswerRepository repository, IFormService formServic
         return AnswerMapping.ToGetAnswerDto(await repository.GetById(id));
     }
     
-    public async Task<Answer> GetByIdWithoutMapping(uint id) =>
-        await repository.GetById(id);
+    public async Task<Answer> GetByIdWithoutMapping(uint id)
+    {
+        await Exist(id);
+        
+        return await repository.GetById(id);
+    }
 
     public async Task Create(AddAnswerDto answer, uint formId, uint questionId)
     {
+        if (answer == null)
+            throw new InvalidInputDataException("Comment content can't be null.");
+        
         if (answer.Value == string.Empty)
             throw new InvalidInputDataException("Comment content can't be empty.");
-        
+
         await formService.Exist(formId);
         await questionService.Exist(questionId);
         
@@ -59,6 +70,9 @@ public class AnswerService(IAnswerRepository repository, IFormService formServic
         await repository.Delete(id);
     }
 
-    public async Task Exist(uint id) =>
-        await repository.Exist(id);
+    public async Task Exist(uint id)
+    {
+        if(!await repository.Exist(id))
+            throw new NotFoundException("Answer");
+    }
 }

@@ -12,6 +12,7 @@ builder.Services.AddDbContext<CourseworkDbContext>(options =>
     );
 
 builder.Services.AddRepositories();
+builder.Services.AddServices();
 
 var app = builder.Build();
 
