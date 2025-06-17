@@ -11,12 +11,16 @@ public class QuestionRepository(CourseworkDbContext context) : IQuestionReposito
         await context.Questions
             .AsNoTracking()
             .Where(q => q.TemplateId == templateId)
+            .Include(q => q.Answers)
+            .Include(q => q.Template)
             .ToListAsync();
     
     public async Task<Question> GetById(uint id)
     {
         var question = await context.Questions
             .AsNoTracking()
+            .Include(q => q.Answers)
+            .Include(q => q.Template)
             .FirstAsync(q => q.Id == id);
         
         return question;

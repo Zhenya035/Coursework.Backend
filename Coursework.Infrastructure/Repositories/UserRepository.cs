@@ -27,12 +27,14 @@ public class UserRepository(CourseworkDbContext context) : IUserRepository
     public async Task<List<User>> GetAll() =>
         await context.Users
             .AsNoTracking()
+            .Include(u => u.Templates)
             .ToListAsync();
 
     public async Task<User> GetById(uint id)
     {
         var user = await context.Users
             .AsNoTracking()
+            .Include(u => u.Templates)
             .FirstOrDefaultAsync(u => u.Id == id);
         
         return user;

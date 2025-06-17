@@ -11,12 +11,24 @@ public class TemplateRepository(CourseworkDbContext context) : ITemplateReposito
         await context.Templates
             .AsNoTracking()
             .Where(t => t.AuthorisedEmails.Count == 0 || t.AuthorisedEmails.Contains(email))
+            .Include(t => t.Tags)
+            .Include(t => t.Likes)
+            .Include(t => t.Comments)
+            .Include(t => t.Forms)
+            .Include(t => t.Author)
+            .Include(t => t.Questions)
             .ToListAsync();
 
     public async Task<Template> GetById(uint id)
     {
         var template = await context.Templates
             .AsNoTracking()
+            .Include(t => t.Tags)
+            .Include(t => t.Likes)
+            .Include(t => t.Comments)
+            .Include(t => t.Forms)
+            .Include(t => t.Author)
+            .Include(t => t.Questions)
             .FirstAsync(t => t.Id == id);
         
         return template;

@@ -29,10 +29,12 @@ public class FormRepository(CourseworkDbContext context) : IFormRepository
         return form;
     }
 
-    public async Task Fill(Form form)
+    public async Task<Form> Fill(Form form)
     {
-        await context.Forms.AddAsync(form);
+        var newForm = await context.Forms.AddAsync(form);
         await context.SaveChangesAsync();
+        
+        return newForm.Entity;
     }
 
     public async Task Edit(Form form, List<Answer> answers)
