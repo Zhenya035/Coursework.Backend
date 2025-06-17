@@ -1,6 +1,6 @@
 namespace Coursework.Application.Dto.Request;
 
-public class AddTagDto
+public class AddOrUpdateTagDto
 {
     public string Name { get; set; } = string.Empty;
 }

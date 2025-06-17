@@ -1,4 +1,4 @@
-namespace Coursework.Application.Dto.Request;
+namespace Coursework.Application.Dto.Request.AddDtos;
 
 public class AddCommentDto
 {

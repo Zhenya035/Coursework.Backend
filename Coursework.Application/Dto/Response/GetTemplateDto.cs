@@ -11,6 +11,7 @@ public class GetTemplateDto
     public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
     public List<string> Tags { get; set; } = [];
     public int LikesCount { get; set; } = 0;
+    public int QuestionsCount { get; set; } = 0;
     public List<GetCommentDto> Comments { get; set; } = [];
     public int FormsCount { get; set; } = 0;
     public string Author { get; set; } = string.Empty;
