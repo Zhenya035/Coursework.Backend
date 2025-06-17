@@ -1,6 +1,6 @@
 using Coursework.Infrastructure;
 using Coursework.WebAPI.Extensions;
-using Microsoft.AspNetCore.Diagnostics;
+using Coursework.WebAPI.Middleware;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,11 +17,21 @@ builder.Services.AddServices();
 
 builder.Services.AddJwtTokens(configuration);
 
+builder.Services.AddControllers();
+
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
 var app = builder.Build();
 
-app.UseMiddleware<ExceptionHandlerMiddleware>();
+app.UseSwagger();
+app.UseSwaggerUI();
+
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.MapControllers();
 
 app.Run();
