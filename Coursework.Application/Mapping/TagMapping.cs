@@ -6,10 +6,10 @@ namespace Coursework.Application.Mapping;
 
 public static class TagMapping
 {
-    public static Tag FromAddTagDto(AddTagDto addTag) =>
+    public static Tag FromAddTagDto(AddOrUpdateTagDto addOrUpdateTag) =>
         new Tag()
         {
-            Name = addTag.Name,
+            Name = addOrUpdateTag.Name,
         };
 
     public static GetTagDto ToGetTagDto(Tag tag) =>

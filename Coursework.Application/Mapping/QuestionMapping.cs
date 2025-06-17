@@ -1,4 +1,5 @@
-using Coursework.Application.Dto.Request;
+using Coursework.Application.Dto.Request.AddDtos;
+using Coursework.Application.Dto.Request.UpdateDtos;
 using Coursework.Application.Dto.Response;
 using Coursework.Domain.Models;
 
