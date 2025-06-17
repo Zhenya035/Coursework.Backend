@@ -1,4 +1,6 @@
-using Coursework.Application.Dto.Request;
+using Coursework.Application.Dto.Request.AddDtos;
+using Coursework.Application.Dto.Request.UpdateDtos;
+using Coursework.Application.Dto.Request.User;
 using Coursework.Application.Dto.Response;
 using Coursework.Application.Interfaces.Services;
 using Coursework.Application.Mapping;
@@ -10,11 +12,14 @@ namespace Coursework.Application.Services;
 
 public class TemplateService(
     ITemplateRepository repository,
-    IUserService userService) : ITemplateService
+    IUserRepository userRepository) : ITemplateService
 {
-    public async Task<List<GetTemplateDto>> GetAll(string email)
+    public async Task<List<GetTemplateDto>> GetAll(UserForTemplate user)
     {
-        var templates = await repository.GetAll(email);
+        if(!await userRepository.Exist(user.Email))
+            throw new NotFoundException("User with email");
+        
+        var templates = await repository.GetAll(user.Email);
 
         return templates.Select(TemplateMapping.ToGetTemplateDto).ToList();
     }
@@ -26,7 +31,7 @@ public class TemplateService(
         return TemplateMapping.ToGetTemplateDto(await repository.GetById(id));
     }
 
-    public async Task Create(AddTemplateDto template, uint authorId)
+    public async Task Create(AddTemplateDto template, uint authorId)//Todo проверить есть ли такой тэг если нет то добавить, добавить добавление вопросов
     {
         if(template == null)
             throw new InvalidInputDataException("Template cannot be null");
@@ -40,7 +45,8 @@ public class TemplateService(
         if (await Exist(template.Title))
             throw new AlreadyAddedException("Template");
 
-        await userService.Exist(authorId);
+        if(!await userRepository.Exist(authorId))
+            throw new NotFoundException("User");
         
         var newTemplate = TemplateMapping.FromAddTemplateDto(template);
         newTemplate.AuthorId = authorId;
@@ -48,7 +54,7 @@ public class TemplateService(
         await repository.Create(newTemplate);
     }
 
-    public async Task Update(UpdateTemplateDto template, uint id)
+    public async Task Update(UpdateTemplateDto template, uint id)//todo убрать возможность повтора везде
     {
         if(template == null)
             throw new InvalidInputDataException("Template cannot be null");
@@ -65,38 +71,38 @@ public class TemplateService(
         await repository.Update(newTemplate, id);
     }
 
-    public async Task Delete(uint id)
+    public async Task Delete(uint id)//todo удалять сразу вопросы
     {
         await Exist(id);
         
         await repository.Delete(id);
     }
 
-    public async Task AddAuthorizedUser(List<string> emails, uint templateId)
+    public async Task AddAuthorizedUsers(AuthorizedUserDto users, uint id)
     {
-        if(emails.Count == 0)
+        if(users.Emails.Count == 0)
             throw new InvalidInputDataException("Emails cannot be empty");
 
-        await Exist(templateId);
+        await Exist(id);
 
-        var template = await GetByIdForAuthorizedUser(templateId);
+        var template = await GetByIdForAuthorizedUser(id);
         
-        await repository.AddAuthorizedUser(template, emails);
+        await repository.AddAuthorizedUser(template, users.Emails);
     }
 
-    public async Task DeleteAuthorizedUser(List<string> emails, uint templateId)
+    public async Task DeleteAuthorizedUsers(AuthorizedUserDto users, uint id)
     {
-        if(emails.Count == 0)
+        if(users.Emails.Count == 0)
             throw new InvalidInputDataException("Emails cannot be empty");
 
-        await Exist(templateId);
+        await Exist(id);
 
-        var template = await GetByIdForAuthorizedUser(templateId);
+        var template = await GetByIdForAuthorizedUser(id);
         
-        await repository.DeleteAuthorizedUser(template, emails);
+        await repository.DeleteAuthorizedUser(template, users.Emails);
     }
 
-    public async Task Exist(uint id)
+    private async Task Exist(uint id)
     {
         if (!await repository.Exist(id))
             throw new NotFoundException("Template");

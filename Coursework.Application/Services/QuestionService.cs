@@ -1,4 +1,5 @@
-using Coursework.Application.Dto.Request;
+using Coursework.Application.Dto.Request.AddDtos;
+using Coursework.Application.Dto.Request.UpdateDtos;
 using Coursework.Application.Dto.Response;
 using Coursework.Application.Interfaces.Services;
 using Coursework.Application.Mapping;
@@ -9,12 +10,13 @@ namespace Coursework.Application.Services;
 
 public class QuestionService(
     IQuestionRepository repository, 
-    ITemplateService templateService) : IQuestionService
+    ITemplateRepository templateRepository) : IQuestionService
 {
     public async Task<List<GetQuestionDto>> GetAllByTemplate(uint templateId)
     {
-        await templateService.Exist(templateId);
-        
+        if(!await templateRepository.Exist(templateId))
+            throw new NotFoundException("Template");
+            
         var questions = await repository.GetAllByTemplate(templateId);
         
         return questions.Select(QuestionMapping.ToGetQuestionDto).ToList();
@@ -39,7 +41,8 @@ public class QuestionService(
         if(await Exist(question))
             throw new AlreadyAddedException("Question");
         
-        await templateService.Exist(templateId);
+        if(!await templateRepository.Exist(templateId))
+            throw new NotFoundException("Template");
         
         var newQuestion = QuestionMapping.FromAddQuestionDto(question);
         newQuestion.TemplateId = templateId;
@@ -62,7 +65,7 @@ public class QuestionService(
         await repository.Update(newQuestion, id);
     }
 
-    public async Task Delete(uint id)
+    public async Task Delete(uint id)//todo удалить все ответы сразу
     {
         await Exist(id);
         
@@ -83,7 +86,7 @@ public class QuestionService(
         await repository.MakeNotDisplay(id);
     }
 
-    public async Task Exist(uint id)
+    private async Task Exist(uint id)
     {
         if (!await repository.Exist(id))
             throw new NotFoundException("Question");

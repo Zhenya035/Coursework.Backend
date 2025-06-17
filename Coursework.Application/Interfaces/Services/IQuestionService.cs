@@ -1,4 +1,5 @@
-using Coursework.Application.Dto.Request;
+using Coursework.Application.Dto.Request.AddDtos;
+using Coursework.Application.Dto.Request.UpdateDtos;
 using Coursework.Application.Dto.Response;
 
 namespace Coursework.Application.Interfaces.Services;
@@ -12,5 +13,4 @@ public interface IQuestionService
     public Task Delete(uint id);
     public Task MakeDisplay(uint id);
     public Task MakeNotDisplay(uint id);
-    public Task Exist(uint id);
 }

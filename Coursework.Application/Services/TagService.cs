@@ -1,4 +1,5 @@
 using Coursework.Application.Dto.Request;
+using Coursework.Application.Dto.Request.AddDtos;
 using Coursework.Application.Dto.Response;
 using Coursework.Application.Interfaces.Services;
 using Coursework.Application.Mapping;
@@ -23,30 +24,30 @@ public class TagService(ITagRepository repository) : ITagService
         return TagMapping.ToGetTagDto(await repository.GetById(id));
     }
 
-    public async Task Add(AddTagDto tag)
+    public async Task Add(AddOrUpdateTagDto newTagDto)
     {
-        if(tag is null)
+        if(newTagDto is null)
             throw new InvalidInputDataException("Tag cannot be null");
         
-        if(string.IsNullOrWhiteSpace(tag.Name))
+        if(string.IsNullOrWhiteSpace(newTagDto.Name))
             throw new InvalidInputDataException("Tag name cannot be empty");
 
-        if(await Exist(tag.Name))
+        if(await Exist(newTagDto.Name))
             throw new AlreadyAddedException("Tag");
 
-        var newTag = TagMapping.FromAddTagDto(tag);
+        var newTag = TagMapping.FromAddTagDto(newTagDto);
         
         await repository.Add(newTag);
     }
 
-    public async Task Update(string name, uint id)
+    public async Task Update(AddOrUpdateTagDto newTag, uint id)
     {
-        if(string.IsNullOrWhiteSpace(name))
+        if(string.IsNullOrWhiteSpace(newTag.Name))
             throw new InvalidInputDataException("Tag name cannot be empty");
 
         await Exist(id);
         
-        await repository.Update(name, id);
+        await repository.Update(newTag.Name, id);
     }
 
     public async Task Delete(uint id)
@@ -56,7 +57,7 @@ public class TagService(ITagRepository repository) : ITagService
         await repository.Delete(id);
     }
 
-    public async Task Exist(uint id)
+    private async Task Exist(uint id)
     {
         if (!await repository.Exist(id))
             throw new NotFoundException("Tag");

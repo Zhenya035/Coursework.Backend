@@ -1,4 +1,5 @@
-using Coursework.Application.Dto.Request;
+using Coursework.Application.Dto.Request.AddDtos;
+using Coursework.Application.Dto.Request.UpdateDtos;
 using Coursework.Application.Dto.Response;
 using Coursework.Application.Interfaces.Services;
 using Coursework.Application.Mapping;
@@ -9,12 +10,13 @@ namespace Coursework.Application.Services;
 
 public class CommentService(
     ICommentRepository repository,
-    ITemplateService templateService,
-    IUserService userService) : ICommentService
+    ITemplateRepository templateRepository,
+    IUserRepository userRepository) : ICommentService
 {
     public async Task<List<GetCommentDto>> GetAllByTemplate(uint templateId)
     {
-        await templateService.Exist(templateId);
+        if(!await templateRepository.Exist(templateId))
+            throw new NotFoundException("Template");
         
         var comments = await repository.GetAllByTemplate(templateId);
         
@@ -33,12 +35,14 @@ public class CommentService(
         if(comment == null)
             throw new InvalidDataException("Transient comment can't be null");
         
-        if (comment.Content != string.Empty)
+        if (string.IsNullOrWhiteSpace(comment.Content))
             throw new InvalidInputDataException("Comment content can't be empty.");
         
-        await templateService.Exist(templateId);
-        await userService.Exist(authorId);
-        
+        if(!await templateRepository.Exist(templateId))
+            throw new NotFoundException("Template");
+        if(!await userRepository.Exist(authorId))
+            throw new NotFoundException("User");
+            
         var newComment = CommentMapping.FromAddCommentDto(comment);
         newComment.TemplateId = templateId;
         newComment.AuthorId = authorId;
@@ -46,14 +50,14 @@ public class CommentService(
         await repository.Add(newComment);
     }
 
-    public async Task Update(string content, uint id)
+    public async Task Update(UpdateCommentDto newContent, uint id)
     {
-        if(content == string.Empty)
+        if(newContent.Content == string.Empty)
             throw new InvalidInputDataException("Comment content can't be empty.");
 
         await Exist(id);
         
-        await repository.Update(content, id);
+        await repository.Update(newContent.Content, id);
     }
 
     public async Task Delete(uint id)
@@ -63,7 +67,7 @@ public class CommentService(
         await repository.Delete(id);
     }
 
-    public async Task Exist(uint id)
+    private async Task Exist(uint id)
     {
         if(!await repository.Exist(id))
             throw new NotFoundException("Comment");

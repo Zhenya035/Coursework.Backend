@@ -8,7 +8,9 @@ using Coursework.Domain.Interfaces.Repositories;
 
 namespace Coursework.Application.Services;
 
-public class UserService(IUserRepository repository, IJwtService jwtService) : IUserService
+public class UserService(
+    IUserRepository repository, 
+    IJwtService jwtService) : IUserService
 {
     public async Task<AuthorizationDto> Register(RegisterUserDto user)
     {
@@ -80,14 +82,14 @@ public class UserService(IUserRepository repository, IJwtService jwtService) : I
         return UserMapping.ToGetUserDto(await repository.GetById(id));
     }
 
-    public async Task Update(string name, uint id)
+    public async Task Update(UpdateUserNameDto user, uint id)
     {
-        if(string.IsNullOrWhiteSpace(name))
+        if(string.IsNullOrWhiteSpace(user.Name))
             throw new InvalidInputDataException("Name can't be empty");
 
         await Exist(id);
         
-        await repository.Update(name, id);
+        await repository.Update(user.Name, id);
     }
 
     public async Task Delete(uint id)
@@ -125,7 +127,7 @@ public class UserService(IUserRepository repository, IJwtService jwtService) : I
         await repository.MakeUser(id);
     }
 
-    public async Task Exist(uint id)
+    private async Task Exist(uint id)
     {
         if (!await repository.Exist(id))
             throw new NotFoundException("User");
