@@ -10,6 +10,8 @@ public class Template
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
     
+    public List<Question> Questions { get; set; } = [];
+    
     public List<TemplatesTags> Tags { get; set; } = [];
     
     public List<Like> Likes { get; set; } = [];

@@ -1,4 +1,5 @@
-﻿using Coursework.Domain.Models;
+﻿using Coursework.Domain.Enums;
+using Coursework.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -10,6 +11,16 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
     {
         builder.HasKey(u => u.Id);
         builder.Property(u => u.Id).ValueGeneratedOnAdd();
+        
+        builder.Property(u => u.Status)
+            .HasConversion<string>(
+                s => s.ToString(),
+                str => Enum.Parse<StatusEnum>(str));
+        
+        builder.Property(u => u.Role)
+            .HasConversion<string>(
+                s => s.ToString(),
+                str => Enum.Parse<RoleEnum>(str));
 
         builder.HasMany(u => u.Comments)
             .WithOne(c => c.Author)
