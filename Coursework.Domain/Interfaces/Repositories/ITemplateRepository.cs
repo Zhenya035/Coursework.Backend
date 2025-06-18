@@ -7,7 +7,7 @@ public interface ITemplateRepository
     public Task<List<Template>> GetAll(string email);
     public Task<Template> GetById(uint id);
     public Task<Template> GetByIdForAuthorizedUser(uint id);
-    public Task Create(Template template);
+    public Task<uint> Create(Template template);
     public Task Update(Template template, uint id);
     public Task Delete(uint id);
     public Task AddAuthorizedUser(Template template, List<string> emails);

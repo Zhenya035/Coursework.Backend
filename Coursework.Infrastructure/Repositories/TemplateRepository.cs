@@ -14,6 +14,7 @@ public class TemplateRepository(CourseworkDbContext context) : ITemplateReposito
             .Include(t => t.Tags)
             .Include(t => t.Likes)
             .Include(t => t.Comments)
+                .ThenInclude(c => c.Author)
             .Include(t => t.Forms)
             .Include(t => t.Author)
             .Include(t => t.Questions)
@@ -45,10 +46,12 @@ public class TemplateRepository(CourseworkDbContext context) : ITemplateReposito
         return template;
     }
 
-    public async Task Create(Template template)
+    public async Task<uint> Create(Template template)
     {
-        await context.Templates.AddAsync(template);
+        var newTemplate = await context.Templates.AddAsync(template);
         await context.SaveChangesAsync();
+        
+        return newTemplate.Entity.Id;
     }
 
     public async Task Update(Template template, uint id) =>

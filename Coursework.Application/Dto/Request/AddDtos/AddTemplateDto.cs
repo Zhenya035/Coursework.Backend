@@ -7,4 +7,6 @@ public class AddTemplateDto
     public List<string> Images { get; set; } = [];
     public List<string> AuthorisedEmails { get; set; } = [];
     public List<string> Tags { get; set; } = [];
+    
+    public List<AddQuestionDto> Questions { get; set; } = [];
 }
