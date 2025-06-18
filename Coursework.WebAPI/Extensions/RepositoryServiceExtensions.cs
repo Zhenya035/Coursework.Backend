@@ -15,5 +15,6 @@ public static class RepositoryServiceExtensions
         services.AddScoped<ITagRepository, TagRepository>();
         services.AddScoped<ITemplateRepository, TemplateRepository>();
         services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<ITemplatesTagsRepository, TemplatesTagsRepository>();
     }
 }

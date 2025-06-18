@@ -14,6 +14,7 @@ public class CourseworkDbContext(DbContextOptions<CourseworkDbContext> options) 
     public DbSet<Tag> Tags { get; set; }
     public DbSet<Template> Templates { get; set; }
     public DbSet<User> Users { get; set; }
+    public DbSet<TemplatesTags> TemplatesTags { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -25,6 +26,7 @@ public class CourseworkDbContext(DbContextOptions<CourseworkDbContext> options) 
         modelBuilder.ApplyConfiguration(new TagConfiguration());
         modelBuilder.ApplyConfiguration(new TemplateConfiguration());
         modelBuilder.ApplyConfiguration(new UserConfiguration());
+        modelBuilder.ApplyConfiguration(new TemplateTagsConfiguration());
         
         base.OnModelCreating(modelBuilder);
     }
