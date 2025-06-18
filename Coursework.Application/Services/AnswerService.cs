@@ -29,47 +29,6 @@ public class AnswerService(
         
         return AnswerMapping.ToGetAnswerDto(await repository.GetById(id));
     }
-    
-    public async Task<Answer> GetByIdWithoutMapping(uint id)
-    {
-        await Exist(id);
-        
-        return await repository.GetById(id);
-    }
-
-    public async Task Create(AddAnswerDto answer, uint questionId)
-    {
-        if (answer == null)
-            throw new InvalidInputDataException("Comment content can't be null.");
-        
-        if (answer.Value == string.Empty)
-            throw new InvalidInputDataException("Comment content can't be empty.");
-        
-        if(!await questionRepository.Exist(questionId))
-            throw new NotFoundException("Question");
-        
-        var newAnswer = AnswerMapping.FromAddAnswerDto(answer);
-        newAnswer.QuestionId = questionId;
-        
-        await repository.Create(newAnswer);
-    }
-
-    public async Task Update(UpdateAnswerDto newValue, uint id)
-    {
-        if(newValue.Value == string.Empty)
-            throw new InvalidDataException("Incorrect answer value");
-
-        await Exist(id);
-        
-        await repository.Update(newValue.Value, id);
-    }
-
-    public async Task Delete(uint id)
-    {
-        await Exist(id);
-        
-        await repository.Delete(id);
-    }
 
     private async Task Exist(uint id)
     {

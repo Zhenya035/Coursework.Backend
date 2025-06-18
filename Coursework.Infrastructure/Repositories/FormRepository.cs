@@ -37,14 +37,6 @@ public class FormRepository(CourseworkDbContext context) : IFormRepository
         return newForm.Entity;
     }
 
-    public async Task Edit(Form form, List<Answer> answers)
-    {
-        form.Answers.Clear();
-        form.Answers.AddRange(answers);
-        
-        await context.SaveChangesAsync();
-    }
-
     public async Task Delete(uint id)
     {
         await context.Forms

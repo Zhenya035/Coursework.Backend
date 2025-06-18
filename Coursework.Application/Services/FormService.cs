@@ -77,24 +77,30 @@ public class FormService(
 
     public async Task Edit(AddOrUpdateFormDto newForm, uint id)
     {
-        /*if (newForm.AnswerIds.Count == 0)
-            throw new InvalidInputDataException("Answer Ids are required");*/
-        
-        var answers = new List<Answer>();
-        
-        /*foreach (var answerId in newForm.AnswerIds)
-        {
-            answers.Add(await answerRepository.GetById(answerId));
-        }*/
+        if (newForm == null)
+            throw new InvalidInputDataException("Transmitted form can't be null");
         
         var form = await GetByIdWithoutMapping(id);
         
-        await repository.Edit(form, answers);
+        if (newForm.Answers.Count != form.Answers.Count)
+            throw new InvalidInputDataException("Answer count is invalid.");
+        
+        for (var i = 0; i < newForm.Answers.Count; i++)
+        {
+            await answerRepository.Update(newForm.Answers[i], form.Answers[i].Id);
+        }
     }
 
     public async Task Delete(uint id)//todo удалять сразу ответы
     {
         await Exist(id);
+        
+        var form = await GetByIdWithoutMapping(id);
+        
+        foreach (var t in form.Answers)
+        {
+            await answerRepository.Delete(t.Id);
+        }
         
         await repository.Delete(id);
     }
