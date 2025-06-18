@@ -9,7 +9,8 @@ using Coursework.Domain.Interfaces.Repositories;
 namespace Coursework.Application.Services;
 
 public class QuestionService(
-    IQuestionRepository repository, 
+    IQuestionRepository repository,
+    IAnswerRepository answerRepository,
     ITemplateRepository templateRepository) : IQuestionService
 {
     public async Task<List<GetQuestionDto>> GetAllByTemplate(uint templateId)
@@ -29,7 +30,7 @@ public class QuestionService(
         return QuestionMapping.ToGetQuestionDto(await repository.GetById(id));
     }
 
-    public async Task Add(AddQuestionDto question, uint templateId)
+    public async Task Add(AddQuestionDto question, uint templateId)//todo проверить тип
     {
         if(question == null)
             throw new InvalidInputDataException("Transmitted question can't be null");
@@ -65,9 +66,15 @@ public class QuestionService(
         await repository.Update(newQuestion, id);
     }
 
-    public async Task Delete(uint id)//todo удалить все ответы сразу
+    public async Task Delete(uint id)
     {
         await Exist(id);
+        var question = await repository.GetById(id);
+        
+        foreach (var questionAnswer in question.Answers)
+        {
+            await answerRepository.Delete(questionAnswer.Id);
+        }
         
         await repository.Delete(id);
     }
