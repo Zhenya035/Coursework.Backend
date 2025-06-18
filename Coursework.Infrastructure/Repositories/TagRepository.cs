@@ -18,10 +18,12 @@ public class TagRepository(CourseworkDbContext context) : ITagRepository
         return tag;
     }
         
-    public async Task Add(Tag tag)
+    public async Task<uint> Add(Tag tag)
     {
-        await context.Tags.AddAsync(tag);
+        var newTag = await context.Tags.AddAsync(tag);
         await context.SaveChangesAsync();
+        
+        return newTag.Entity.Id;
     }
 
     public async Task Update(string name, uint id) =>
