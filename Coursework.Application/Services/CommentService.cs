@@ -1,17 +1,19 @@
 using Coursework.Application.Dto.Request.AddDtos;
 using Coursework.Application.Dto.Request.UpdateDtos;
 using Coursework.Application.Dto.Response;
+using Coursework.Application.Interfaces.Jwt;
 using Coursework.Application.Interfaces.Services;
 using Coursework.Application.Mapping;
 using Coursework.Domain.Exceptions;
 using Coursework.Domain.Interfaces.Repositories;
+using Coursework.Domain.Models;
 
 namespace Coursework.Application.Services;
 
 public class CommentService(
     ICommentRepository repository,
     ITemplateRepository templateRepository,
-    IUserRepository userRepository) : ICommentService
+    IUserRepository userRepository) : ICommentService, IOwnerService<Comment>
 {
     public async Task<List<GetCommentDto>> GetAllByTemplate(uint templateId)
     {
@@ -71,5 +73,12 @@ public class CommentService(
     {
         if(!await repository.Exist(id))
             throw new NotFoundException("Comment");
+    }
+
+    public async Task<uint?> GetOwnerId(uint id)
+    {
+        await Exist(id);
+        var comment = await repository.GetById(id);
+        return comment.AuthorId;
     }
 }

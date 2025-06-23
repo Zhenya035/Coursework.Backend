@@ -2,6 +2,7 @@ using Coursework.Application.Dto.Request.AddDtos;
 using Coursework.Application.Dto.Request.UpdateDtos;
 using Coursework.Application.Dto.Request.User;
 using Coursework.Application.Dto.Response;
+using Coursework.Application.Interfaces.Jwt;
 using Coursework.Application.Interfaces.Services;
 using Coursework.Application.Mapping;
 using Coursework.Domain.Exceptions;
@@ -16,7 +17,7 @@ public class TemplateService(
     ITagRepository tagRepository,
     ITemplatesTagsRepository templateTagsRepository,
     IQuestionRepository questionRepository,
-    IUserRepository userRepository) : ITemplateService
+    IUserRepository userRepository) : ITemplateService, IOwnerService<Template>
 {
     public async Task<List<GetTemplateDto>> GetAll(UserForTemplate user)
     {
@@ -173,4 +174,12 @@ public class TemplateService(
     
     private async Task<Template> GetByIdForAuthorizedUser(uint id) =>
         await repository.GetByIdForAuthorizedUser(id);
+
+    public async Task<uint?> GetOwnerId(uint id)
+    {
+        await Exist(id);
+
+        var template = await repository.GetById(id);
+        return template.AuthorId;
+    }
 }

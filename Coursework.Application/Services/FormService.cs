@@ -1,5 +1,6 @@
 using Coursework.Application.Dto.Request;
 using Coursework.Application.Dto.Response;
+using Coursework.Application.Interfaces.Jwt;
 using Coursework.Application.Interfaces.Services;
 using Coursework.Application.Mapping;
 using Coursework.Domain.Exceptions;
@@ -12,7 +13,7 @@ public class FormService(
     IFormRepository repository,
     ITemplateRepository templateRepository,
     IUserRepository userRepository,
-    IAnswerRepository answerRepository) : IFormService
+    IAnswerRepository answerRepository) : IFormService, IOwnerService<Form>
 {
     public async Task<List<GetFormDto>> GetAllByTemplate(uint templateId)
     {
@@ -109,5 +110,12 @@ public class FormService(
     {
         if(!await repository.Exist(id))
             throw new NotFoundException("Form");
+    }
+
+    public async Task<uint?> GetOwnerId(uint id)
+    {
+        await Exist(id);
+        var form = await repository.GetById(id);
+        return form.AuthorId;
     }
 }

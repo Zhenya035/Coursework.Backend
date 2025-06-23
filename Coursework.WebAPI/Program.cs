@@ -1,4 +1,5 @@
 using Coursework.Infrastructure;
+using Coursework.Infrastructure.Jwt.Authorization;
 using Coursework.WebAPI.Extensions;
 using Coursework.WebAPI.Middleware;
 using Microsoft.EntityFrameworkCore;
@@ -16,6 +17,7 @@ builder.Services.AddRepositories();
 builder.Services.AddServices();
 
 builder.Services.AddJwtTokens(configuration);
+builder.Services.AddCustomAuthorization();
 
 builder.Services.AddControllers();
 
