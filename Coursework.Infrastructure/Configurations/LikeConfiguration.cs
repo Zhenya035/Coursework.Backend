@@ -14,7 +14,7 @@ public class LikeConfiguration : IEntityTypeConfiguration<Like>
         builder.HasOne(l => l.Author)
             .WithMany()
             .HasForeignKey(l => l.AuthorId)
-            .OnDelete(DeleteBehavior.Restrict);//todo обработать
+            .OnDelete(DeleteBehavior.Restrict);
 
         builder.HasOne<Template>()
             .WithMany(t => t.Likes)

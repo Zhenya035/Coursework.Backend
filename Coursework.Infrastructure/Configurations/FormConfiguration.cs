@@ -22,6 +22,6 @@ public class FormConfiguration : IEntityTypeConfiguration<Form>
         builder.HasOne(f => f.Author)
             .WithMany(u => u.Forms)
             .HasForeignKey(f => f.AuthorId)
-            .OnDelete(DeleteBehavior.Restrict);//todo обработать удаление
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }

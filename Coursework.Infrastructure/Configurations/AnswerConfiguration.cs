@@ -18,6 +18,6 @@ public class AnswerConfiguration : IEntityTypeConfiguration<Answer>
         builder.HasOne(a => a.Question)
             .WithMany(q => q.Answers)
             .HasForeignKey(a => a.QuestionId)
-            .OnDelete(DeleteBehavior.Restrict);//todo обработка
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }

@@ -91,7 +91,7 @@ public class FormService(
         }
     }
 
-    public async Task Delete(uint id)//todo удалять сразу ответы
+    public async Task Delete(uint id)
     {
         await Exist(id);
         

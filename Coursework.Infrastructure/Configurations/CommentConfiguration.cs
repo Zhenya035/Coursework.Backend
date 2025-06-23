@@ -14,7 +14,7 @@ public class CommentConfiguration : IEntityTypeConfiguration<Comment>
         builder.HasOne(c => c.Author)
             .WithMany(u => u.Comments)
             .HasForeignKey(c => c.AuthorId)
-            .OnDelete(DeleteBehavior.Restrict); //todo обработать
+            .OnDelete(DeleteBehavior.Restrict);
 
         builder.HasOne(c => c.Template)
             .WithMany(t => t.Comments)
