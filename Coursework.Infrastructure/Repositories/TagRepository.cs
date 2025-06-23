@@ -17,6 +17,15 @@ public class TagRepository(CourseworkDbContext context) : ITagRepository
         
         return tag;
     }
+    
+    public async Task<Tag> GetByName(string name)
+    {
+        var tag = await context.Tags
+            .AsNoTracking()
+            .FirstAsync(t => t.Name == name);
+        
+        return tag;
+    }
         
     public async Task<uint> Add(Tag tag)
     {

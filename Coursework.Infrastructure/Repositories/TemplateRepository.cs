@@ -25,6 +25,7 @@ public class TemplateRepository(CourseworkDbContext context) : ITemplateReposito
         var template = await context.Templates
             .AsNoTracking()
             .Include(t => t.Tags)
+                .ThenInclude(t => t.Tag)
             .Include(t => t.Likes)
             .Include(t => t.Comments)
             .Include(t => t.Forms)
