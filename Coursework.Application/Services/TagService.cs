@@ -1,5 +1,4 @@
 using Coursework.Application.Dto.Request;
-using Coursework.Application.Dto.Request.AddDtos;
 using Coursework.Application.Dto.Response;
 using Coursework.Application.Interfaces.Services;
 using Coursework.Application.Mapping;
@@ -44,6 +43,9 @@ public class TagService(ITagRepository repository) : ITagService
     {
         if(string.IsNullOrWhiteSpace(newTag.Name))
             throw new InvalidInputDataException("Tag name cannot be empty");
+        
+        if(await Exist(newTag.Name))
+            throw new AlreadyAddedException("Tag with this name");
 
         await Exist(id);
         

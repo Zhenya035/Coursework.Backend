@@ -3,6 +3,7 @@ using Coursework.Application.Dto.Request.UpdateDtos;
 using Coursework.Application.Dto.Response;
 using Coursework.Application.Interfaces.Services;
 using Coursework.Application.Mapping;
+using Coursework.Domain.Enums;
 using Coursework.Domain.Exceptions;
 using Coursework.Domain.Interfaces.Repositories;
 
@@ -30,22 +31,25 @@ public class QuestionService(
         return QuestionMapping.ToGetQuestionDto(await repository.GetById(id));
     }
 
-    public async Task Add(AddQuestionDto question, uint templateId)//todo проверить тип
+    public async Task Add(AddQuestionDto question, uint templateId)
     {
         if(question == null)
             throw new InvalidInputDataException("Transmitted question can't be null");
         
         if (string.IsNullOrWhiteSpace(question.Name) ||
-            string.IsNullOrWhiteSpace(question.Description))
+            string.IsNullOrWhiteSpace(question.Description) || 
+            string.IsNullOrWhiteSpace(question.Type) ||
+            Enum.TryParse(question.Type, out QuestionTypeEnum questionType))
             throw new InvalidDataException("Incorrect question.");
         
-        if(await Exist(question))
+        if(await Exist(question.Name, question.Description, question.Type))
             throw new AlreadyAddedException("Question");
         
         if(!await templateRepository.Exist(templateId))
             throw new NotFoundException("Template");
         
         var newQuestion = QuestionMapping.FromAddQuestionDto(question);
+        newQuestion.Type = questionType;
         newQuestion.TemplateId = templateId;
         
         await repository.Add(newQuestion);
@@ -58,10 +62,14 @@ public class QuestionService(
         
         if (question.Name == string.Empty || question.Description == string.Empty)
             throw new InvalidDataException("Incorrect question.");
+        
+        if(await Exist(question.Name, question.Description, question.Type))
+            throw new AlreadyAddedException("Question with this data");
 
         await Exist(id);
         
         var newQuestion = QuestionMapping.FromUpdateQuestionDto(question);
+        newQuestion.Type = Enum.Parse<QuestionTypeEnum>(question.Type);
         
         await repository.Update(newQuestion, id);
     }
@@ -99,6 +107,11 @@ public class QuestionService(
             throw new NotFoundException("Question");
     }
 
-    private async Task<bool> Exist(AddQuestionDto question) =>
-        await repository.Exist(question.Name, question.Description, question.Type);
+    private async Task<bool> Exist(string name, string description, string type)
+    {
+        if(Enum.TryParse(type, out QuestionTypeEnum questionType))
+            throw new InvalidInputDataException("Incorrect question type.");
+        
+        return await repository.Exist(name, description, questionType);
+    }
 }

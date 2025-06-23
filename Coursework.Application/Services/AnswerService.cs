@@ -1,18 +1,14 @@
-using Coursework.Application.Dto.Request.AddDtos;
-using Coursework.Application.Dto.Request.UpdateDtos;
 using Coursework.Application.Dto.Response;
 using Coursework.Application.Interfaces.Services;
 using Coursework.Application.Mapping;
 using Coursework.Domain.Exceptions;
 using Coursework.Domain.Interfaces.Repositories;
-using Coursework.Domain.Models;
 
 namespace Coursework.Application.Services;
 
 public class AnswerService(
     IAnswerRepository repository,
-    IFormRepository formRepository,
-    IQuestionRepository questionRepository) : IAnswerService
+    IFormRepository formRepository) : IAnswerService
 {
     public async Task<List<GetAnswerDto>> GetAllByForm(uint formId)
     {

@@ -73,19 +73,54 @@ public class TemplateService(
         }
     }
 
-    public async Task Update(UpdateTemplateDto template, uint id)//todo убрать возможность повтора везде
+    public async Task Update(UpdateTemplateDto updateTemplateDto, uint id)
     {
-        if(template == null)
+        if(updateTemplateDto == null)
             throw new InvalidInputDataException("Template cannot be null");
         
-        if(string.IsNullOrWhiteSpace(template.Title) ||
-           string.IsNullOrWhiteSpace(template.Description) ||
-           template.Images.Count == 0)
+        if(string.IsNullOrWhiteSpace(updateTemplateDto.Title) ||
+           string.IsNullOrWhiteSpace(updateTemplateDto.Description) ||
+           updateTemplateDto.Images.Count == 0)
             throw new InvalidInputDataException("Incorrect template data");
-
-        await Exist(id);
         
-        var newTemplate = TemplateMapping.FromUpdateTemplateDto(template);
+        if(await Exist(updateTemplateDto.Title))
+            throw new AlreadyAddedException("Template with this title");
+
+        var template = await repository.GetById(id);
+        
+        if(updateTemplateDto.Questions.Count != template.Questions.Count)
+            throw new InvalidInputDataException("Incorrect question count");
+        
+        var questions = updateTemplateDto.Questions.Select(QuestionMapping.FromUpdateQuestionDto).ToList();
+        for (var i = 0; i < questions.Count; i++)
+            await questionRepository.Update(questions[i], template.Questions[i].Id);
+
+        var existingTags = template.Tags.Select(tt => tt.Tag).ToList();
+        
+        var tagForDelete = existingTags.Where(t => !updateTemplateDto.Tags.Contains(t.Name)).ToList();
+        foreach (var tFD in tagForDelete)
+            await templateTagsRepository.Delete(template.Id, tFD.Id);
+        
+        var tagForAdd = updateTemplateDto.Tags.Where(t => !existingTags
+                .Select(eT => eT.Name).Contains(t)).ToList();
+        
+        var newTagsId = new List<uint>();
+        foreach (var tag in tagForAdd)
+        {
+            if(!await tagRepository.Exist(tag))
+            {
+                var newTag = new Tag { Name = tag };
+                newTagsId.Add(await tagRepository.Add(newTag));
+            }
+            else
+            {
+                var newTag = await tagRepository.GetByName(tag);
+                newTagsId.Add(newTag.Id);
+            }
+        }
+        await templateTagsRepository.Add(template.Id, newTagsId);
+        
+        var newTemplate = TemplateMapping.FromUpdateTemplateDto(updateTemplateDto);
         
         await repository.Update(newTemplate, id);
     }

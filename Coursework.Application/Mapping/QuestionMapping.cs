@@ -11,7 +11,6 @@ public static class QuestionMapping
         new Question()
         {
             Name = addQuestionDto.Name,
-            Type = addQuestionDto.Type,
             Description = addQuestionDto.Description,
             IsDisplayed = addQuestionDto.IsDisplayed
         };
@@ -20,7 +19,6 @@ public static class QuestionMapping
         new Question()
         {
             Name = updateQuestionDto.Name,
-            Type = updateQuestionDto.Type,
             Description = updateQuestionDto.Description
         };
 
