@@ -37,42 +37,42 @@ public class UserController(IUserService service) : ControllerBase
     }
 
     [Authorize("AdminOnly")]
-    [HttpDelete("{id}/delete")]
-    public async Task<IActionResult> Delete(uint id)
+    [HttpDelete("delete")]
+    public async Task<IActionResult> Delete([FromBody] List<uint> ids)
     {
-        await service.Delete(id);
+        await service.Delete(ids);
         return Ok();
     }
 
     [Authorize("AdminOnly")]
-    [HttpPut("{id}/block")]
-    public async Task<IActionResult> Block(uint id)
+    [HttpPut("block")]
+    public async Task<IActionResult> Block([FromBody] List<uint> ids)
     {
-        await service.Block(id);
+        await service.Block(ids);
         return Ok();
     }
 
     [Authorize("AdminOnly")]
-    [HttpPut("{id}/unBlock")]
-    public async Task<IActionResult> UnBlock(uint id)
+    [HttpPut("unBlock")]
+    public async Task<IActionResult> UnBlock([FromBody] List<uint> ids)
     {
-        await service.UnBlock(id);
+        await service.UnBlock(ids);
         return Ok();
     }
 
     [Authorize("AdminOnly")]
-    [HttpPut("{id}/makeAdmin")]
-    public async Task<IActionResult> MakeAdmin(uint id)
+    [HttpPut("makeAdmin")]
+    public async Task<IActionResult> MakeAdmin([FromBody] List<uint> ids)
     {
-        await service.MakeAdmin(id);
+        await service.MakeAdmin(ids);
         return Ok();
     }
     
     [Authorize("AdminOnly")]
-    [HttpPut("{id}/makeUser")]
-    public async Task<IActionResult> MakeUser(uint id)
+    [HttpPut("makeUser")]
+    public async Task<IActionResult> MakeUser([FromBody] List<uint> ids)
     {
-        await service.MakeUser(id);
+        await service.MakeUser(ids);
         return Ok();
     }
 }

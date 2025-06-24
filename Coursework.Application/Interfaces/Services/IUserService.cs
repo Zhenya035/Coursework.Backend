@@ -10,9 +10,9 @@ public interface IUserService
     public Task<List<GetUserDto>> GetAll(uint id);
     public Task<GetUserDto> GetById(uint id);
     public Task Update(UpdateUserNameDto user, uint id);
-    public Task Delete(uint id);
-    public Task Block(uint id);
-    public Task UnBlock(uint id);
-    public Task MakeAdmin(uint id);
-    public Task MakeUser(uint id);
+    public Task Delete(List<uint> ids);
+    public Task Block(List<uint> ids);
+    public Task UnBlock(List<uint> ids);
+    public Task MakeAdmin(List<uint> ids);
+    public Task MakeUser(List<uint> ids);
 }

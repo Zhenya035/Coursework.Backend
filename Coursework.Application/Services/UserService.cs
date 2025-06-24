@@ -92,39 +92,44 @@ public class UserService(
         await repository.Update(user.Name, id);
     }
 
-    public async Task Delete(uint id)
+    public async Task Delete(List<uint> ids)
     {
-        await Exist(id);
+        foreach (var id in ids)
+            await Exist(id);
         
-        await repository.Delete(id);
+        await repository.Delete(ids);
     }
 
-    public async Task Block(uint id)
+    public async Task Block(List<uint> ids)
     {
-        await Exist(id);
+        foreach (var id in ids)
+            await Exist(id);
         
-        await repository.Block(id);
+        await repository.Block(ids);
     }
 
-    public async Task UnBlock(uint id)
+    public async Task UnBlock(List<uint> ids)
     {
-        await Exist(id);
+        foreach (var id in ids)
+            await Exist(id);
         
-        await repository.UnBlock(id);
+        await repository.UnBlock(ids);
     }
 
-    public async Task MakeAdmin(uint id)
+    public async Task MakeAdmin(List<uint> ids)
     {
-        await Exist(id);
+        foreach (var id in ids)
+            await Exist(id);
         
-        await repository.MakeAdmin(id);
+        await repository.MakeAdmin(ids);
     }
 
-    public async Task MakeUser(uint id)
+    public async Task MakeUser(List<uint> ids)
     {
-        await Exist(id);
+        foreach (var id in ids)
+            await Exist(id);
         
-        await repository.MakeUser(id);
+        await repository.MakeUser(ids);
     }
 
     private async Task Exist(uint id)

@@ -48,35 +48,35 @@ public class UserRepository(CourseworkDbContext context) : IUserRepository
                 .SetProperty(u => u.Name, name)
             );
 
-    public async Task Delete(uint id) =>
+    public async Task Delete(List<uint> ids) =>
         await context.Users
-            .Where(u => u.Id == id)
+            .Where(u => ids.Contains(u.Id))
             .ExecuteDeleteAsync();
 
-    public async Task Block(uint id) =>
+    public async Task Block(List<uint> ids) =>
         await context.Users
-            .Where(u => u.Id == id)
+            .Where(u => ids.Contains(u.Id))
             .ExecuteUpdateAsync(u => u
                 .SetProperty(u => u.Status, StatusEnum.Blocked)
             );
 
-    public async Task UnBlock(uint id) =>
+    public async Task UnBlock(List<uint> ids) =>
         await context.Users
-            .Where(u => u.Id == id)
+            .Where(u => ids.Contains(u.Id))
             .ExecuteUpdateAsync(u => u
                 .SetProperty(u => u.Status, StatusEnum.Active)
             );
 
-    public async Task MakeAdmin(uint id) =>
+    public async Task MakeAdmin(List<uint> ids) =>
         await context.Users
-            .Where(u => u.Id == id)
+            .Where(u => ids.Contains(u.Id))
             .ExecuteUpdateAsync(u => u
                 .SetProperty(u => u.Role, RoleEnum.Admin)
             );
 
-    public async Task MakeUser(uint id) =>
+    public async Task MakeUser(List<uint> ids) =>
         await context.Users
-            .Where(u => u.Id == id)
+            .Where(u => ids.Contains(u.Id))
             .ExecuteUpdateAsync(u => u
                 .SetProperty(u => u.Role, RoleEnum.User)
             );
