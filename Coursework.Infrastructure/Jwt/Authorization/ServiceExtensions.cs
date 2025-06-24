@@ -25,7 +25,7 @@ public static class ServiceExtensions
         });
 
         services.AddSingleton<IAuthorizationHandler, AdminHandler>();
-        services.AddSingleton<IAuthorizationHandler, OwnerTemplateForFormHandler>();
+        services.AddScoped<IAuthorizationHandler, OwnerTemplateForFormHandler>();
         services.AddScoped<IAuthorizationHandler, OwnerHandler<Comment>>();
         services.AddScoped<IAuthorizationHandler, OwnerHandler<Form>>();
         services.AddScoped<IAuthorizationHandler, OwnerHandler<Template>>();
