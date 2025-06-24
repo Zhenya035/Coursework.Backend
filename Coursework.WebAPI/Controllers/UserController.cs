@@ -1,6 +1,7 @@
 using Coursework.Application.Dto.Request.User;
 using Coursework.Application.Dto.Response;
 using Coursework.Application.Interfaces.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Coursework.WebAPI.Controllers;
@@ -17,14 +18,17 @@ public class UserController(IUserService service) : ControllerBase
     public async Task<ActionResult<AuthorizationDto>> Login([FromBody] LoginUserDto user) =>
         Ok(await service.Login(user));
 
+    [Authorize("AdminOnly")]
     [HttpGet]
     public async Task<ActionResult<List<GetUserDto>>> GetAll() =>
         Ok(await service.GetAll());
     
+    [Authorize("AdminOnly")]
     [HttpGet("{id}")]
     public async Task<ActionResult<GetUserDto>> GetById(uint id) =>
         Ok(await service.GetById(id));
 
+    [Authorize]
     [HttpPut("{id}/update")]
     public async Task<IActionResult> Update([FromBody] UpdateUserNameDto user, uint id)
     {
@@ -32,6 +36,7 @@ public class UserController(IUserService service) : ControllerBase
         return Ok();
     }
 
+    [Authorize("AdminOnly")]
     [HttpDelete("{id}/delete")]
     public async Task<IActionResult> Delete(uint id)
     {
@@ -39,6 +44,7 @@ public class UserController(IUserService service) : ControllerBase
         return Ok();
     }
 
+    [Authorize("AdminOnly")]
     [HttpPut("{id}/block")]
     public async Task<IActionResult> Block(uint id)
     {
@@ -46,6 +52,7 @@ public class UserController(IUserService service) : ControllerBase
         return Ok();
     }
 
+    [Authorize("AdminOnly")]
     [HttpPut("{id}/unBlock")]
     public async Task<IActionResult> UnBlock(uint id)
     {
@@ -53,6 +60,7 @@ public class UserController(IUserService service) : ControllerBase
         return Ok();
     }
 
+    [Authorize("AdminOnly")]
     [HttpPut("{id}/makeAdmin")]
     public async Task<IActionResult> MakeAdmin(uint id)
     {
@@ -60,6 +68,7 @@ public class UserController(IUserService service) : ControllerBase
         return Ok();
     }
     
+    [Authorize("AdminOnly")]
     [HttpPut("{id}/makeUser")]
     public async Task<IActionResult> MakeUser(uint id)
     {

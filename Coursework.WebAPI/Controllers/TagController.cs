@@ -1,10 +1,12 @@
 using Coursework.Application.Dto.Request;
 using Coursework.Application.Dto.Response;
 using Coursework.Application.Interfaces.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Coursework.WebAPI.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("tags")]
 public class TagController(ITagService service) : ControllerBase

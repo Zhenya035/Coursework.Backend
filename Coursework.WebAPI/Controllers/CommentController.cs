@@ -2,10 +2,12 @@ using Coursework.Application.Dto.Request.AddDtos;
 using Coursework.Application.Dto.Request.UpdateDtos;
 using Coursework.Application.Dto.Response;
 using Coursework.Application.Interfaces.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Coursework.WebAPI.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("comments")]
 public class CommentController(ICommentService service) : ControllerBase
@@ -25,6 +27,8 @@ public class CommentController(ICommentService service) : ControllerBase
         return Ok();
     }
 
+    [Authorize("AdminOnly")]
+    [Authorize("OwnerOnly")]
     [HttpPut("{id}/update")]
     public async Task<IActionResult> Update([FromBody] UpdateCommentDto comment, uint id)
     {
@@ -32,6 +36,8 @@ public class CommentController(ICommentService service) : ControllerBase
         return Ok();
     }
 
+    [Authorize("AdminOnly")]
+    [Authorize("OwnerOnly")]
     [HttpDelete("{id}/delete")]
     public async Task<IActionResult> Delete(uint id)
     {

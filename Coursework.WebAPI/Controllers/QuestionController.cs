@@ -2,10 +2,12 @@ using Coursework.Application.Dto.Request.AddDtos;
 using Coursework.Application.Dto.Request.UpdateDtos;
 using Coursework.Application.Dto.Response;
 using Coursework.Application.Interfaces.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Coursework.WebAPI.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("questions")]
 public class QuestionController(IQuestionService service) : ControllerBase
@@ -24,7 +26,7 @@ public class QuestionController(IQuestionService service) : ControllerBase
         await service.Add(question, templateId);
         return Ok();
     }
-
+    
     [HttpPut("{id}/update")]
     public async Task<IActionResult> Update(UpdateQuestionDto question, uint id)
     {

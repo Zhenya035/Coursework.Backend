@@ -3,6 +3,7 @@ using Coursework.Application.Dto.Request.UpdateDtos;
 using Coursework.Application.Dto.Request.User;
 using Coursework.Application.Dto.Response;
 using Coursework.Application.Interfaces.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Coursework.WebAPI.Controllers;
@@ -15,10 +16,12 @@ public class TemplateController(ITemplateService service) : ControllerBase
     public async Task<ActionResult<List<GetTemplateDto>>> GetAll([FromBody]UserForTemplate user) =>
         Ok(await service.GetAll(user));
     
+    [Authorize]
     [HttpGet("{id}")]
     public async Task<ActionResult<GetTemplateDto>> GetById(uint id) =>
         Ok(await service.GetById(id));
 
+    [Authorize]
     [HttpPost("add/author/{authorId}")]
     public async Task<IActionResult> Create([FromBody] AddTemplateDto template, uint authorId)
     {
@@ -26,6 +29,8 @@ public class TemplateController(ITemplateService service) : ControllerBase
         return Ok();
     }
 
+    [Authorize("AdminOnly")]
+    [Authorize("OwnerOnly")]
     [HttpPut("{id}/update")]
     public async Task<IActionResult> Update([FromBody] UpdateTemplateDto template, uint id)
     {
@@ -33,6 +38,8 @@ public class TemplateController(ITemplateService service) : ControllerBase
         return Ok();
     }
 
+    [Authorize("AdminOnly")]
+    [Authorize("OwnerOnly")]
     [HttpDelete("{id}/delete")]
     public async Task<IActionResult> Delete(uint id)
     {
@@ -40,6 +47,8 @@ public class TemplateController(ITemplateService service) : ControllerBase
         return Ok();
     }
 
+    [Authorize("AdminOnly")]
+    [Authorize("OwnerOnly")]
     [HttpPut("{id}/addAuthorizedUsers")]
     public async Task<IActionResult> AddAuthorizedUsers([FromBody] AuthorizedUserDto users, uint id)
     {
@@ -47,6 +56,8 @@ public class TemplateController(ITemplateService service) : ControllerBase
         return Ok();
     }
     
+    [Authorize("AdminOnly")]
+    [Authorize("OwnerOnly")]
     [HttpPut("{id}/deleteAuthorizedUsers")]
     public async Task<IActionResult> DeleteAuthorizedUsers([FromBody] AuthorizedUserDto users, uint id)
     {
