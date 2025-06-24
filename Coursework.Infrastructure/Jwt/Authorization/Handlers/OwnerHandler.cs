@@ -24,15 +24,15 @@ public class OwnerHandler<TEntry>(IOwnerService<TEntry> service) : Authorization
         if (!uint.TryParse(idString, out var entityId))
             return;
         
-        var userId = context.User.FindFirst("id")!.Value;
-        if(string.IsNullOrEmpty(userId))
+        var userIdClaim = context.User.FindFirst("id");
+        if(userIdClaim is null || string.IsNullOrEmpty(userIdClaim.Value))
             return;
 
         var ownerId = await service.GetOwnerId(entityId);
         if(ownerId == null)
             return;
         
-        if (ownerId.ToString() == userId)
+        if (ownerId.ToString() == userIdClaim.Value)
         {
             context.Succeed(requirement);
         }

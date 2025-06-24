@@ -10,13 +10,14 @@ public class AdminHandler : AuthorizationHandler<AdminRequirement>
         AuthorizationHandlerContext context,
         AdminRequirement requirement)
     {
-        var role = context.User.FindFirst("role")!.Value;
+        var roleClaim = context.User.FindFirst("role");
         
-        if (Enum.TryParse<RoleEnum>(role, out var roleEnum) && roleEnum == RoleEnum.Admin)
+        if (roleClaim is null || !Enum.TryParse<RoleEnum>(roleClaim.Value, out var roleEnum) && roleEnum != RoleEnum.Admin)
         {
-            context.Succeed(requirement);
+            return Task.CompletedTask;
         }
 
+        context.Succeed(requirement);
         return Task.CompletedTask;
     }
 

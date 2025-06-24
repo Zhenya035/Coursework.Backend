@@ -22,8 +22,8 @@ public class OwnerTemplateForFormHandler(IFormRepository formRepository) :  Auth
         if (!uint.TryParse(idString, out var entityId))
             return;
         
-        var userId = context.User.FindFirst("id")!.Value;
-        if(string.IsNullOrEmpty(userId))
+        var userIdClaim = context.User.FindFirst("id");
+        if(userIdClaim is null || string.IsNullOrEmpty(userIdClaim.Value))
             return;
 
         if (!await formRepository.Exist(entityId))
@@ -31,7 +31,7 @@ public class OwnerTemplateForFormHandler(IFormRepository formRepository) :  Auth
         
         var form = await formRepository.GetById(entityId);
         
-        if (form.Template.AuthorId.ToString() == userId)
+        if (form.Template.AuthorId.ToString() == userIdClaim.Value)
         {
             context.Succeed(requirement);
         }
