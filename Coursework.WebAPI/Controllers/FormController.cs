@@ -11,10 +11,15 @@ namespace Coursework.WebAPI.Controllers;
 [Route("forms")]
 public class FormController(IFormService service) : ControllerBase
 {
+    [Authorize("AdminOnly")]
+    [Authorize("OwnerOnly.Template")]
     [HttpGet("template/{templateId}")]
     public async Task<ActionResult<List<GetFormDto>>> GetAllTemplate(uint templateId) =>
         Ok(await service.GetAllByTemplate(templateId));
     
+    [Authorize("AdminOnly")]
+    [Authorize("OwnerOnly.Universal")]
+    [Authorize("OwnerTemplateForForm")]
     [HttpGet("{id}")]
     public async Task<ActionResult<GetFormDto>> GetById(uint id) =>
         Ok(await service.GetById(id));
@@ -27,7 +32,7 @@ public class FormController(IFormService service) : ControllerBase
     }
 
     [Authorize("AdminOnly")]
-    [Authorize("OwnerOnly")]
+    [Authorize("OwnerOnly.Universal")]
     [HttpPut("{id}/update")]
     public async Task<IActionResult> Edit([FromBody] AddOrUpdateFormDto form, uint id)
     {
@@ -36,7 +41,7 @@ public class FormController(IFormService service) : ControllerBase
     }
 
     [Authorize("AdminOnly")]
-    [Authorize("OwnerOnly")]    
+    [Authorize("OwnerOnly.Universal")]    
     [HttpDelete("{id}/delete")]
     public async Task<IActionResult> Delete(uint id)
     {

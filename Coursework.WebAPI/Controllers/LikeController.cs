@@ -21,6 +21,8 @@ public class LikeController(ILikeService service) : ControllerBase
         return Ok();
     }
 
+    [Authorize("AdminOnly")]
+    [Authorize("OwnerOnly.Universal")]
     [HttpDelete("{id}/delete")]
     public async Task<IActionResult> Delete(uint id)
     {

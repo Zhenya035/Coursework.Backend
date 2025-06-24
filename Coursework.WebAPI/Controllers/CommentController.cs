@@ -28,7 +28,7 @@ public class CommentController(ICommentService service) : ControllerBase
     }
 
     [Authorize("AdminOnly")]
-    [Authorize("OwnerOnly")]
+    [Authorize("OwnerOnly.Universal")]
     [HttpPut("{id}/update")]
     public async Task<IActionResult> Update([FromBody] UpdateCommentDto comment, uint id)
     {
@@ -37,7 +37,7 @@ public class CommentController(ICommentService service) : ControllerBase
     }
 
     [Authorize("AdminOnly")]
-    [Authorize("OwnerOnly")]
+    [Authorize("OwnerOnly.Universal")]
     [HttpDelete("{id}/delete")]
     public async Task<IActionResult> Delete(uint id)
     {

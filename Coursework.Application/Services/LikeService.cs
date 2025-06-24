@@ -1,4 +1,5 @@
 using Coursework.Application.Dto.Response;
+using Coursework.Application.Interfaces.Jwt;
 using Coursework.Application.Interfaces.Services;
 using Coursework.Application.Mapping;
 using Coursework.Domain.Exceptions;
@@ -7,7 +8,7 @@ using Coursework.Domain.Models;
 
 namespace Coursework.Application.Services;
 
-public class LikeService(ILikeRepository repository) : ILikeService
+public class LikeService(ILikeRepository repository) : ILikeService, IOwnerService<Like>
 {
     public async Task<GetLikeDto> GetById(uint id)
     {
@@ -44,4 +45,12 @@ public class LikeService(ILikeRepository repository) : ILikeService
     
     private async Task<bool> Exist(uint authorId, uint templateId) =>
         await repository.Exist(authorId, templateId);
+
+    public async Task<uint?> GetOwnerId(uint id)
+    {
+        await Exist(id);
+
+        var like = await repository.GetById(id);
+        return like.AuthorId;
+    }
 }

@@ -16,17 +16,24 @@ public static class ServiceExtensions
         {
             options.AddPolicy("AdminOnly", policy => 
                 policy.AddRequirements(new AdminRequirement()));
-            options.AddPolicy("OwnerOnly", policy =>
-                policy.AddRequirements(new OwnerRequirement()));
+            options.AddPolicy("OwnerOnly.Universal", policy =>
+                policy.AddRequirements(new OwnerRequirement("id")));
+            options.AddPolicy("OwnerOnly.Template", policy =>
+                policy.AddRequirements(new OwnerRequirement("templateId")));
+            options.AddPolicy("OwnerTemplateForForm", policy =>
+                policy.AddRequirements(new OwnerTemplateForFormRequirement()));
         });
 
         services.AddSingleton<IAuthorizationHandler, AdminHandler>();
+        services.AddSingleton<IAuthorizationHandler, OwnerTemplateForFormHandler>();
         services.AddScoped<IAuthorizationHandler, OwnerHandler<Comment>>();
         services.AddScoped<IAuthorizationHandler, OwnerHandler<Form>>();
         services.AddScoped<IAuthorizationHandler, OwnerHandler<Template>>();
+        services.AddScoped<IAuthorizationHandler, OwnerHandler<Like>>();
         
         services.AddScoped<IOwnerService<Comment>, CommentService>();
         services.AddScoped<IOwnerService<Form>, FormService>();
         services.AddScoped<IOwnerService<Template>, TemplateService>();
+        services.AddScoped<IOwnerService<Like>, LikeService>();
     }
 }

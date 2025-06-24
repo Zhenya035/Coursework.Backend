@@ -30,7 +30,7 @@ public class TemplateController(ITemplateService service) : ControllerBase
     }
 
     [Authorize("AdminOnly")]
-    [Authorize("OwnerOnly")]
+    [Authorize("OwnerOnly.Universal")]
     [HttpPut("{id}/update")]
     public async Task<IActionResult> Update([FromBody] UpdateTemplateDto template, uint id)
     {
@@ -39,7 +39,7 @@ public class TemplateController(ITemplateService service) : ControllerBase
     }
 
     [Authorize("AdminOnly")]
-    [Authorize("OwnerOnly")]
+    [Authorize("OwnerOnly.Universal")]
     [HttpDelete("{id}/delete")]
     public async Task<IActionResult> Delete(uint id)
     {
@@ -48,7 +48,7 @@ public class TemplateController(ITemplateService service) : ControllerBase
     }
 
     [Authorize("AdminOnly")]
-    [Authorize("OwnerOnly")]
+    [Authorize("OwnerOnly.Universal")]
     [HttpPut("{id}/addAuthorizedUsers")]
     public async Task<IActionResult> AddAuthorizedUsers([FromBody] AuthorizedUserDto users, uint id)
     {
@@ -57,7 +57,7 @@ public class TemplateController(ITemplateService service) : ControllerBase
     }
     
     [Authorize("AdminOnly")]
-    [Authorize("OwnerOnly")]
+    [Authorize("OwnerOnly.Universal")]
     [HttpPut("{id}/deleteAuthorizedUsers")]
     public async Task<IActionResult> DeleteAuthorizedUsers([FromBody] AuthorizedUserDto users, uint id)
     {
