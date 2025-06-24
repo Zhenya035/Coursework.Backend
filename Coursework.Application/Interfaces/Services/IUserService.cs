@@ -7,7 +7,7 @@ public interface IUserService
 {
     public Task<AuthorizationDto> Register(RegisterUserDto user);
     public Task<AuthorizationDto> Login(LoginUserDto user);
-    public Task<List<GetUserDto>> GetAll();
+    public Task<List<GetUserDto>> GetAll(uint id);
     public Task<GetUserDto> GetById(uint id);
     public Task Update(UpdateUserNameDto user, uint id);
     public Task Delete(uint id);

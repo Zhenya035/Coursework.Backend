@@ -6,7 +6,7 @@ public interface IUserRepository
 {
     public Task<User> Register(User user);
     public Task<User?> GetByEmail(string email);
-    public Task<List<User>> GetAll();
+    public Task<List<User>> GetAll(uint id);
     public Task<User> GetById(uint id);
     public Task Update(string name, uint id);
     public Task Delete(uint id);

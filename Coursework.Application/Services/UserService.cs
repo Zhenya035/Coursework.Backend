@@ -68,9 +68,9 @@ public class UserService(
         return response;
     }
 
-    public async Task<List<GetUserDto>> GetAll()
+    public async Task<List<GetUserDto>> GetAll(uint id)
     {
-        var users = await repository.GetAll();
+        var users = await repository.GetAll(id);
         
         return users.Select(UserMapping.ToGetUserDto).ToList();
     }
