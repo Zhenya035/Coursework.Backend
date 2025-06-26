@@ -21,8 +21,7 @@ public static class TemplateMapping
         {
             Title = updateTemplateDto.Title,
             Description = updateTemplateDto.Description,
-            Images = updateTemplateDto.Images,
-            UpdatedAt = updateTemplateDto.UpdatedAt
+            Images = updateTemplateDto.Images
         };
 
     public static GetTemplateDto ToGetTemplateDto(Template template) =>
@@ -35,7 +34,7 @@ public static class TemplateMapping
             AuthorisedEmails = template.AuthorisedEmails,
             CreatedAt = template.CreatedAt,
             UpdatedAt = template.UpdatedAt,
-            Tags = template.Tags.Select(t => t.Tag.Name).ToList(),
+            Tags = template.Tags.Select(tt => tt.Tag.Name).ToList(),
             LikesCount = template.Likes.Count,
             QuestionsCount = template.Questions.Count,
             Comments = template.Comments.Select(CommentMapping.ToGetCommentDto).ToList(),

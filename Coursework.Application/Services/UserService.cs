@@ -35,6 +35,7 @@ public class UserService(
         {
             Id = newUser.Id,
             Token = token,
+            Role = newUser.Role.ToString(),
         };
         
         return response;
@@ -63,6 +64,7 @@ public class UserService(
         {
             Id = user.Id,
             Token = token,
+            Role = user.Role.ToString(),
         };
         
         return response;

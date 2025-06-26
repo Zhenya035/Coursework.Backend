@@ -8,5 +8,4 @@ public class UpdateTemplateDto
     public List<string> Tags { get; set; } = [];
     
     public List<UpdateQuestionDto> Questions { get; set; } = [];
-    public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 }
