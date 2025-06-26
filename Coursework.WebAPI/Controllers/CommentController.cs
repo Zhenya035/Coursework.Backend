@@ -28,17 +28,17 @@ public class CommentController(ICommentService service) : ControllerBase
     }
 
     [Authorize("AdminOnly")]
-    [Authorize("OwnerOnly.Universal")]
-    [HttpPut("{id}/update")]
-    public async Task<IActionResult> Update([FromBody] UpdateCommentDto comment, uint id)
+    [Authorize("OwnerOnly.Comment")]
+    [HttpPut("{commentId}/update")]
+    public async Task<IActionResult> Update([FromBody] UpdateCommentDto comment, uint commentId)
     {
-        await service.Update(comment, id);
+        await service.Update(comment, commentId);
         return Ok();
     }
 
     [Authorize("AdminOnly")]
-    [Authorize("OwnerOnly.Universal")]
-    [HttpDelete("{id}/delete")]
+    [Authorize("OwnerOnly.Comment")]
+    [HttpDelete("{commentId}/delete")]
     public async Task<IActionResult> Delete(uint id)
     {
         await service.Delete(id);

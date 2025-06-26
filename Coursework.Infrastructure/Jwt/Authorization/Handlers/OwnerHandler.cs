@@ -1,5 +1,6 @@
 using Coursework.Application.Authorization.Requirement;
 using Coursework.Application.Interfaces.Jwt;
+using Coursework.Domain.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -23,6 +24,11 @@ public class OwnerHandler<TEntry>(IOwnerService<TEntry> service) : Authorization
 
         if (!uint.TryParse(idString, out var entityId))
             return;
+        
+        if (typeof(TEntry) == typeof(Comment) && idParamName != "commentId") return;
+        if (typeof(TEntry) == typeof(Form) && idParamName != "formId") return;
+        if (typeof(TEntry) == typeof(Template) && idParamName != "templateId") return;
+        if (typeof(TEntry) == typeof(Like) && idParamName != "likeId") return;
         
         var userIdClaim = context.User.FindFirst("id");
         if(userIdClaim is null || string.IsNullOrEmpty(userIdClaim.Value))

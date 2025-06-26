@@ -12,7 +12,7 @@ public class AdminHandler : AuthorizationHandler<AdminRequirement>
     {
         var roleClaim = context.User.FindFirst("role");
         
-        if (roleClaim is null || !Enum.TryParse<RoleEnum>(roleClaim.Value, out var roleEnum) && roleEnum != RoleEnum.Admin)
+        if (roleClaim is null || !Enum.TryParse<RoleEnum>(roleClaim.Value, out var roleEnum) || roleEnum != RoleEnum.Admin)
         {
             return Task.CompletedTask;
         }

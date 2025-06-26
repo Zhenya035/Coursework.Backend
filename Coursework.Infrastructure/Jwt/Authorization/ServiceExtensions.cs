@@ -16,8 +16,12 @@ public static class ServiceExtensions
         {
             options.AddPolicy("AdminOnly", policy => 
                 policy.AddRequirements(new AdminRequirement()));
-            options.AddPolicy("OwnerOnly.Universal", policy =>
-                policy.AddRequirements(new OwnerRequirement("id")));
+            options.AddPolicy("OwnerOnly.Comment", policy =>
+                policy.AddRequirements(new OwnerRequirement("commentId")));
+            options.AddPolicy("OwnerOnly.Form", policy =>
+                policy.AddRequirements(new OwnerRequirement("formId")));
+            options.AddPolicy("OwnerOnly.Like", policy =>
+                policy.AddRequirements(new OwnerRequirement("likeId")));
             options.AddPolicy("OwnerOnly.Template", policy =>
                 policy.AddRequirements(new OwnerRequirement("templateId")));
             options.AddPolicy("OwnerTemplateForForm", policy =>

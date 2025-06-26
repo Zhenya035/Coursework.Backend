@@ -30,38 +30,38 @@ public class TemplateController(ITemplateService service) : ControllerBase
     }
 
     [Authorize("AdminOnly")]
-    [Authorize("OwnerOnly.Universal")]
-    [HttpPut("{id}/update")]
-    public async Task<IActionResult> Update([FromBody] UpdateTemplateDto template, uint id)
+    [Authorize("OwnerOnly.Template")]
+    [HttpPut("{templateId}/update")]
+    public async Task<IActionResult> Update([FromBody] UpdateTemplateDto template, uint templateId)
     {
-        await service.Update(template, id);
+        await service.Update(template, templateId);
         return Ok();
     }
 
     [Authorize("AdminOnly")]
-    [Authorize("OwnerOnly.Universal")]
-    [HttpDelete("{id}/delete")]
-    public async Task<IActionResult> Delete(uint id)
+    [Authorize("OwnerOnly.Template")]
+    [HttpDelete("{templateId}/delete")]
+    public async Task<IActionResult> Delete(uint templateId)
     {
-        await service.Delete(id);
+        await service.Delete(templateId);
         return Ok();
     }
 
     [Authorize("AdminOnly")]
-    [Authorize("OwnerOnly.Universal")]
-    [HttpPut("{id}/addAuthorizedUsers")]
-    public async Task<IActionResult> AddAuthorizedUsers([FromBody] AuthorizedUserDto users, uint id)
+    [Authorize("OwnerOnly.Template")]
+    [HttpPut("{templateId}/addAuthorizedUsers")]
+    public async Task<IActionResult> AddAuthorizedUsers([FromBody] AuthorizedUserDto users, uint templateId)
     {
-        await service.AddAuthorizedUsers(users, id);
+        await service.AddAuthorizedUsers(users, templateId);
         return Ok();
     }
     
     [Authorize("AdminOnly")]
-    [Authorize("OwnerOnly.Universal")]
-    [HttpPut("{id}/deleteAuthorizedUsers")]
-    public async Task<IActionResult> DeleteAuthorizedUsers([FromBody] AuthorizedUserDto users, uint id)
+    [Authorize("OwnerOnly.Template")]
+    [HttpPut("{templateId}/deleteAuthorizedUsers")]
+    public async Task<IActionResult> DeleteAuthorizedUsers([FromBody] AuthorizedUserDto users, uint templateId)
     {
-        await service.DeleteAuthorizedUsers(users, id);
+        await service.DeleteAuthorizedUsers(users, templateId);
         return Ok();
     }
 }

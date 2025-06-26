@@ -18,11 +18,11 @@ public class FormController(IFormService service) : ControllerBase
         Ok(await service.GetAllByTemplate(templateId));
     
     [Authorize("AdminOnly")]
-    [Authorize("OwnerOnly.Universal")]
+    [Authorize("OwnerOnly.Form")]
     [Authorize("OwnerTemplateForForm")]
-    [HttpGet("{id}")]
-    public async Task<ActionResult<GetFormDto>> GetById(uint id) =>
-        Ok(await service.GetById(id));
+    [HttpGet("{formId}")]
+    public async Task<ActionResult<GetFormDto>> GetById(uint formId) =>
+        Ok(await service.GetById(formId));
 
     [HttpPost("add/template/{templateId}/author/{authorId}")]
     public async Task<IActionResult> Fill([FromBody] AddOrUpdateFormDto form, uint templateId, uint authorId)
@@ -32,20 +32,20 @@ public class FormController(IFormService service) : ControllerBase
     }
 
     [Authorize("AdminOnly")]
-    [Authorize("OwnerOnly.Universal")]
-    [HttpPut("{id}/update")]
-    public async Task<IActionResult> Edit([FromBody] AddOrUpdateFormDto form, uint id)
+    [Authorize("OwnerOnly.Form")]
+    [HttpPut("{formId}/update")]
+    public async Task<IActionResult> Edit([FromBody] AddOrUpdateFormDto form, uint formId)
     {
-        await service.Edit(form, id);
+        await service.Edit(form, formId);
         return Ok();
     }
 
     [Authorize("AdminOnly")]
-    [Authorize("OwnerOnly.Universal")]    
-    [HttpDelete("{id}/delete")]
-    public async Task<IActionResult> Delete(uint id)
+    [Authorize("OwnerOnly.Form")]    
+    [HttpDelete("{formId}/delete")]
+    public async Task<IActionResult> Delete(uint formId)
     {
-        await service.Delete(id);
+        await service.Delete(formId);
         return Ok();
     }
 }

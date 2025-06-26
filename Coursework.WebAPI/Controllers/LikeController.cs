@@ -22,11 +22,11 @@ public class LikeController(ILikeService service) : ControllerBase
     }
 
     [Authorize("AdminOnly")]
-    [Authorize("OwnerOnly.Universal")]
-    [HttpDelete("{id}/delete")]
-    public async Task<IActionResult> Delete(uint id)
+    [Authorize("OwnerOnly.Like")]
+    [HttpDelete("{likeId}/delete")]
+    public async Task<IActionResult> Delete(uint likeId)
     {
-        await service.Delete(id);
+        await service.Delete(likeId);
         return Ok();
     }
 
