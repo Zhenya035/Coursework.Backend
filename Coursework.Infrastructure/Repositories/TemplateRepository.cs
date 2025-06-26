@@ -7,11 +7,12 @@ namespace Coursework.Infrastructure.Repositories;
 
 public class TemplateRepository(CourseworkDbContext context) : ITemplateRepository
 {
-    public async Task<List<Template>> GetAll(string email) =>
+    public async Task<List<Template>> GetAll(string email, string role) =>
         await context.Templates
             .AsNoTracking()
-            .Where(t => t.AuthorisedEmails.Count == 0 || t.AuthorisedEmails.Contains(email))
+            .Where(t => t.AuthorisedEmails.Count == 0 || t.AuthorisedEmails.Contains(email) || role == "Admin")
             .Include(t => t.Tags)
+                .ThenInclude(tt => tt.Tag)
             .Include(t => t.Likes)
             .Include(t => t.Comments)
                 .ThenInclude(c => c.Author)
@@ -95,4 +96,9 @@ public class TemplateRepository(CourseworkDbContext context) : ITemplateReposito
         await context.Templates
             .AsNoTracking()
             .FirstOrDefaultAsync(c => c.Title == title) != null;
+    
+    public async Task<bool> Exist(string title, uint id) => 
+        await context.Templates
+            .AsNoTracking()
+            .FirstOrDefaultAsync(c => c.Title == title && c.Id != id) != null;
 }

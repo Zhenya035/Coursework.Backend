@@ -5,6 +5,7 @@ using Coursework.Application.Dto.Response;
 using Coursework.Application.Interfaces.Jwt;
 using Coursework.Application.Interfaces.Services;
 using Coursework.Application.Mapping;
+using Coursework.Domain.Enums;
 using Coursework.Domain.Exceptions;
 using Coursework.Domain.Interfaces.Repositories;
 using Coursework.Domain.Models;
@@ -23,8 +24,10 @@ public class TemplateService(
     {
         if(!await userRepository.Exist(user.Email))
             throw new NotFoundException("User with email");
+        if(user.Role != RoleEnum.User.ToString() && user.Role != RoleEnum.Admin.ToString())
+            throw new NotFoundException("Role");
         
-        var templates = await repository.GetAll(user.Email);
+        var templates = await repository.GetAll(user.Email, user.Role);
 
         return templates.Select(TemplateMapping.ToGetTemplateDto).ToList();
     }
@@ -84,7 +87,7 @@ public class TemplateService(
            updateTemplateDto.Images.Count == 0)
             throw new InvalidInputDataException("Incorrect template data");
         
-        if(await Exist(updateTemplateDto.Title))
+        if(await Exist(updateTemplateDto.Title, id))
             throw new AlreadyAddedException("Template with this title");
 
         var template = await repository.GetById(id);
@@ -122,6 +125,7 @@ public class TemplateService(
         await templateTagsRepository.Add(template.Id, newTagsId);
         
         var newTemplate = TemplateMapping.FromUpdateTemplateDto(updateTemplateDto);
+        newTemplate.UpdatedAt = DateTime.UtcNow;
         
         await repository.Update(newTemplate, id);
     }
@@ -147,6 +151,7 @@ public class TemplateService(
         await Exist(id);
 
         var template = await GetByIdForAuthorizedUser(id);
+        template.UpdatedAt = DateTime.UtcNow;
         
         await repository.AddAuthorizedUser(template, users.Emails);
     }
@@ -159,6 +164,7 @@ public class TemplateService(
         await Exist(id);
 
         var template = await GetByIdForAuthorizedUser(id);
+        template.UpdatedAt = DateTime.UtcNow;
         
         await repository.DeleteAuthorizedUser(template, users.Emails);
     }
@@ -171,6 +177,9 @@ public class TemplateService(
 
     private async Task<bool> Exist(string title) =>
         await repository.Exist(title);
+    
+    private async Task<bool> Exist(string title, uint id) =>
+        await repository.Exist(title, id);
     
     private async Task<Template> GetByIdForAuthorizedUser(uint id) =>
         await repository.GetByIdForAuthorizedUser(id);
