@@ -29,6 +29,12 @@ var app = builder.Build();
 app.UseSwagger();
 app.UseSwaggerUI();
 
+app.UseCors(policy => policy
+    .WithOrigins("http://localhost:5173", "https://coursework-frontend-six.vercel.app")
+    .AllowAnyMethod()
+    .AllowAnyHeader()
+    .AllowCredentials());
+
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 app.UseAuthentication();
