@@ -39,6 +39,7 @@ public static class TemplateMapping
             QuestionsCount = template.Questions.Count,
             Comments = template.Comments.Select(CommentMapping.ToGetCommentDto).ToList(),
             FormsCount = template.Forms.Count,
-            Author = template.Author.Name
+            Author = template.Author.Name,
+            AuthorId = template.AuthorId
         };
 }

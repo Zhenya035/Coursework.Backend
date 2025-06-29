@@ -15,4 +15,5 @@ public class GetTemplateDto
     public List<GetCommentDto> Comments { get; set; } = [];
     public int FormsCount { get; set; } = 0;
     public string Author { get; set; } = string.Empty;
+    public uint AuthorId { get; set; } = 0;
 }
