@@ -18,7 +18,7 @@ public class UserController(IUserService service) : ControllerBase
     public async Task<ActionResult<AuthorizationDto>> Login([FromBody] LoginUserDto user) =>
         Ok(await service.Login(user));
 
-    [Authorize("AdminOnly")]
+    [Authorize]
     [HttpGet("{id}/all")]
     public async Task<ActionResult<List<GetUserDto>>> GetAll(uint id) =>
         Ok(await service.GetAll(id));

@@ -16,24 +16,21 @@ public static class ServiceExtensions
         {
             options.AddPolicy("AdminOnly", policy => 
                 policy.AddRequirements(new AdminRequirement()));
-            options.AddPolicy("OwnerOnly.Comment", policy =>
-                policy.AddRequirements(new OwnerRequirement("commentId")));
-            options.AddPolicy("OwnerOnly.Form", policy =>
-                policy.AddRequirements(new OwnerRequirement("formId")));
-            options.AddPolicy("OwnerOnly.Like", policy =>
-                policy.AddRequirements(new OwnerRequirement("likeId")));
-            options.AddPolicy("OwnerOnly.Template", policy =>
-                policy.AddRequirements(new OwnerRequirement("templateId")));
-            options.AddPolicy("OwnerTemplateForForm", policy =>
-                policy.AddRequirements(new OwnerTemplateForFormRequirement()));
+            options.AddPolicy("OwnerOrAdminOnly.Comment", policy =>
+                policy.AddRequirements(new OwnerOrAdminRequirement("commentId")));
+            options.AddPolicy("OwnerOrAdminOnly.Form", policy =>
+                policy.AddRequirements(new OwnerOrAdminRequirement("formId")));
+            options.AddPolicy("OwnerOrAdminOnly.Like", policy =>
+                policy.AddRequirements(new OwnerOrAdminRequirement("likeId")));
+            options.AddPolicy("OwnerOrAdminOnly.Template", policy =>
+                policy.AddRequirements(new OwnerOrAdminRequirement("templateId")));
         });
 
         services.AddSingleton<IAuthorizationHandler, AdminHandler>();
-        services.AddScoped<IAuthorizationHandler, OwnerTemplateForFormHandler>();
-        services.AddScoped<IAuthorizationHandler, OwnerHandler<Comment>>();
-        services.AddScoped<IAuthorizationHandler, OwnerHandler<Form>>();
-        services.AddScoped<IAuthorizationHandler, OwnerHandler<Template>>();
-        services.AddScoped<IAuthorizationHandler, OwnerHandler<Like>>();
+        services.AddScoped<IAuthorizationHandler, OwnerOrAdminHandler<Comment>>();
+        services.AddScoped<IAuthorizationHandler, OwnerOrAdminHandler<Form>>();
+        services.AddScoped<IAuthorizationHandler, OwnerOrAdminHandler<Template>>();
+        services.AddScoped<IAuthorizationHandler, OwnerOrAdminHandler<Like>>();
         
         services.AddScoped<IOwnerService<Comment>, CommentService>();
         services.AddScoped<IOwnerService<Form>, FormService>();

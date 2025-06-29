@@ -29,17 +29,15 @@ public class TemplateController(ITemplateService service) : ControllerBase
         return Ok();
     }
 
-    [Authorize("AdminOnly")]
-    [Authorize("OwnerOnly.Template")]
+    [Authorize("OwnerOrAdminOnly.Template")]
     [HttpPut("{templateId}/update")]
     public async Task<IActionResult> Update([FromBody] UpdateTemplateDto template, uint templateId)
     {
         await service.Update(template, templateId);
         return Ok();
     }
-
-    [Authorize("AdminOnly")]
-    [Authorize("OwnerOnly.Template")]
+    
+    [Authorize("OwnerOrAdminOnly.Template")]
     [HttpDelete("{templateId}/delete")]
     public async Task<IActionResult> Delete(uint templateId)
     {
@@ -47,8 +45,7 @@ public class TemplateController(ITemplateService service) : ControllerBase
         return Ok();
     }
 
-    [Authorize("AdminOnly")]
-    [Authorize("OwnerOnly.Template")]
+    [Authorize("OwnerOrAdminOnly.Template")]
     [HttpPut("{templateId}/addAuthorizedUsers")]
     public async Task<IActionResult> AddAuthorizedUsers([FromBody] AuthorizedUserDto users, uint templateId)
     {
@@ -56,8 +53,7 @@ public class TemplateController(ITemplateService service) : ControllerBase
         return Ok();
     }
     
-    [Authorize("AdminOnly")]
-    [Authorize("OwnerOnly.Template")]
+    [Authorize("OwnerOrAdminOnly.Template")]
     [HttpPut("{templateId}/deleteAuthorizedUsers")]
     public async Task<IActionResult> DeleteAuthorizedUsers([FromBody] AuthorizedUserDto users, uint templateId)
     {

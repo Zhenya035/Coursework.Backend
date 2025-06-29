@@ -14,6 +14,7 @@ public class LikeController(ILikeService service) : ControllerBase
     public async Task<ActionResult<GetLikeDto>> GetById(uint id) =>
         Ok(await service.GetById(id));
 
+    [Authorize]
     [HttpPost("add/template/{templateId}/author/{authorId}")]
     public async Task<IActionResult> Add(uint templateId, uint authorId)
     {
@@ -21,8 +22,7 @@ public class LikeController(ILikeService service) : ControllerBase
         return Ok();
     }
 
-    [Authorize("AdminOnly")]
-    [Authorize("OwnerOnly.Like")]
+    [Authorize("OwnerOrAdminOnly.Like")]
     [HttpDelete("{likeId}/delete")]
     public async Task<IActionResult> Delete(uint likeId)
     {

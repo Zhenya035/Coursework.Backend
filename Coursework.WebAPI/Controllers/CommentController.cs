@@ -26,9 +26,8 @@ public class CommentController(ICommentService service) : ControllerBase
         await service.Add(comment, templateId, authorId);
         return Ok();
     }
-
-    [Authorize("AdminOnly")]
-    [Authorize("OwnerOnly.Comment")]
+    
+    [Authorize("OwnerOrAdminOnly.Comment")]
     [HttpPut("{commentId}/update")]
     public async Task<IActionResult> Update([FromBody] UpdateCommentDto comment, uint commentId)
     {
@@ -36,8 +35,7 @@ public class CommentController(ICommentService service) : ControllerBase
         return Ok();
     }
 
-    [Authorize("AdminOnly")]
-    [Authorize("OwnerOnly.Comment")]
+    [Authorize("OwnerOrAdminOnly.Comment")]
     [HttpDelete("{commentId}/delete")]
     public async Task<IActionResult> Delete(uint id)
     {
