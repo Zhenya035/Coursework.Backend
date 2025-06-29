@@ -10,7 +10,6 @@ public class TemplateRepository(CourseworkDbContext context) : ITemplateReposito
     public async Task<List<Template>> GetAll(string email, string role) =>
         await context.Templates
             .AsNoTracking()
-            .Where(t => t.AuthorisedEmails.Count == 0 || t.AuthorisedEmails.Contains(email) || role == "Admin")
             .Include(t => t.Tags)
                 .ThenInclude(tt => tt.Tag)
             .Include(t => t.Likes)
@@ -19,6 +18,8 @@ public class TemplateRepository(CourseworkDbContext context) : ITemplateReposito
             .Include(t => t.Forms)
             .Include(t => t.Author)
             .Include(t => t.Questions)
+            .Where(t => t.AuthorisedEmails.Count == 0 || t.AuthorisedEmails.Contains(email) 
+                                                      || t.Author.Email == email || role == "Admin")
             .ToListAsync();
 
     public async Task<Template> GetById(uint id)
