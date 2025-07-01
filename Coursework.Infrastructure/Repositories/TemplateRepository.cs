@@ -30,6 +30,7 @@ public class TemplateRepository(CourseworkDbContext context) : ITemplateReposito
                 .ThenInclude(t => t.Tag)
             .Include(t => t.Likes)
             .Include(t => t.Comments)
+                .ThenInclude(c => c.Author)
             .Include(t => t.Forms)
             .Include(t => t.Author)
             .Include(t => t.Questions)
