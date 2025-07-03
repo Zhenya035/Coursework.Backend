@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Coursework.WebAPI.Controllers;
 
-[Authorize]
+//[Authorize]
 [ApiController]
 [Route("likes")]
 public class LikeController(ILikeService service) : ControllerBase
@@ -13,27 +13,22 @@ public class LikeController(ILikeService service) : ControllerBase
     [HttpGet("{id}")]
     public async Task<ActionResult<GetLikeDto>> GetById(uint id) =>
         Ok(await service.GetById(id));
-
-    [Authorize]
+    
     [HttpPost("add/template/{templateId}/author/{authorId}")]
     public async Task<IActionResult> Add(uint templateId, uint authorId)
     {
-        await service.Add(authorId, templateId);
+        await service.Add(templateId, authorId);
         return Ok();
     }
 
-    [Authorize("OwnerOrAdminOnly.Like")]
-    [HttpDelete("{likeId}/delete")]
-    public async Task<IActionResult> Delete(uint likeId)
+    [HttpDelete("delete/template/{templateId}/author/{authorId}")]
+    public async Task<IActionResult> Delete(uint templateId, uint authorId)
     {
-        await service.Delete(likeId);
+        await service.Delete(templateId, authorId);
         return Ok();
     }
 
-    [HttpGet("{id}/check")]//todo переделать
-    public async Task<IActionResult> Check(uint id)
-    {
-        await service.Exist(id);
-        return Ok();
-    }
+    [HttpGet("check/author/{authorId}/template/{templateId}")]
+    public async Task<ActionResult<bool>> Check(uint authorId, uint templateId) =>
+        Ok(await service.Exist(authorId, templateId));
 }

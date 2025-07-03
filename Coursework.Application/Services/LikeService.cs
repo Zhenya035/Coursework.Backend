@@ -8,7 +8,7 @@ using Coursework.Domain.Models;
 
 namespace Coursework.Application.Services;
 
-public class LikeService(ILikeRepository repository) : ILikeService, IOwnerService<Like>
+public class LikeService(ILikeRepository repository) : ILikeService
 {
     public async Task<GetLikeDto> GetById(uint id)
     {
@@ -17,7 +17,7 @@ public class LikeService(ILikeRepository repository) : ILikeService, IOwnerServi
         return LikeMapping.ToGetLikeDto(await repository.GetById(id));
     }
 
-    public async Task Add(uint authorId, uint templateId)
+    public async Task Add(uint templateId, uint authorId)
     {
         if(await Exist(authorId, templateId))
             throw new AlreadyAddedException("Like");
@@ -30,27 +30,20 @@ public class LikeService(ILikeRepository repository) : ILikeService, IOwnerServi
         await repository.Add(like);
     }
 
-    public async Task Delete(uint id)
+    public async Task Delete(uint templateId, uint authorId)
     {
-        await Exist(id);
+        if(!await Exist(authorId, templateId))
+            throw new NotFoundException("Like");
         
-        await repository.Delete(id);
+        await repository.Delete(authorId, templateId);
     }
 
-    public async Task Exist(uint id)
+    private async Task Exist(uint id)
     {
         if(!await repository.Exist(id))
             throw new NotFoundException("Like");
     }
     
-    private async Task<bool> Exist(uint authorId, uint templateId) =>
+    public async Task<bool> Exist(uint authorId, uint templateId) =>
         await repository.Exist(authorId, templateId);
-
-    public async Task<uint?> GetOwnerId(uint id)
-    {
-        await Exist(id);
-
-        var like = await repository.GetById(id);
-        return like.AuthorId;
-    }
 }

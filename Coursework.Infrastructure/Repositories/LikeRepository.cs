@@ -23,9 +23,9 @@ public class LikeRepository(CourseworkDbContext context) : ILikeRepository
         await context.SaveChangesAsync();
     }
 
-    public async Task Delete(uint id) =>
+    public async Task Delete(uint authorId, uint templateId) =>
         await context.Likes
-            .Where(l => l.Id == id)
+            .Where(l => l.AuthorId == authorId && l.TemplateId == templateId)
             .ExecuteDeleteAsync();
 
     public async Task<bool> Exist(uint id) =>
