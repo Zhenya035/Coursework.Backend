@@ -37,9 +37,9 @@ public class CommentRepository(CourseworkDbContext context) : ICommentRepository
                 .SetProperty(c => c.Content, content)
             );
 
-    public async Task Delete(uint id) => 
+    public async Task Delete(List<uint> ids) => 
         await context.Comments
-            .Where(c => c.Id == id)
+            .Where(c => ids.Contains(c.Id))
             .ExecuteDeleteAsync();
 
     public async Task<bool> Exist(uint id) =>

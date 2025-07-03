@@ -36,10 +36,10 @@ public class CommentController(ICommentService service) : ControllerBase
     }
 
     [Authorize("OwnerOrAdminOnly.Comment")]
-    [HttpDelete("{commentId}/delete")]
-    public async Task<IActionResult> Delete(uint id)
+    [HttpDelete("delete")]
+    public async Task<IActionResult> Delete([FromBody] List<uint> ids)
     {
-        await service.Delete(id);
+        await service.Delete(ids);
         return Ok();
     }
 }

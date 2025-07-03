@@ -10,5 +10,5 @@ public interface ICommentService
     public Task<GetCommentDto> GetById(uint id);
     public Task Add(AddCommentDto comment, uint templateId, uint authorId);
     public Task Update(UpdateCommentDto newContent, uint id);
-    public Task Delete(uint id);
+    public Task Delete(List<uint> ids);
 }

@@ -62,11 +62,12 @@ public class CommentService(
         await repository.Update(newContent.Content, id);
     }
 
-    public async Task Delete(uint id)
+    public async Task Delete(List<uint> ids)
     {
-        await Exist(id);
-        
-        await repository.Delete(id);
+        foreach (var id in ids)
+            await Exist(id);
+
+        await repository.Delete(ids);
     }
 
     private async Task Exist(uint id)
