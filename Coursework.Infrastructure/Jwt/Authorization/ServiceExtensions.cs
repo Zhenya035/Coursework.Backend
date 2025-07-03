@@ -20,8 +20,6 @@ public static class ServiceExtensions
                 policy.AddRequirements(new OwnerOrAdminRequirement("commentId")));
             options.AddPolicy("OwnerOrAdminOnly.Form", policy =>
                 policy.AddRequirements(new OwnerOrAdminRequirement("formId")));
-            options.AddPolicy("OwnerOrAdminOnly.Like", policy =>
-                policy.AddRequirements(new OwnerOrAdminRequirement("likeId")));
             options.AddPolicy("OwnerOrAdminOnly.Template", policy =>
                 policy.AddRequirements(new OwnerOrAdminRequirement("templateId")));
         });
@@ -30,11 +28,9 @@ public static class ServiceExtensions
         services.AddScoped<IAuthorizationHandler, OwnerOrAdminHandler<Comment>>();
         services.AddScoped<IAuthorizationHandler, OwnerOrAdminHandler<Form>>();
         services.AddScoped<IAuthorizationHandler, OwnerOrAdminHandler<Template>>();
-        services.AddScoped<IAuthorizationHandler, OwnerOrAdminHandler<Like>>();
         
         services.AddScoped<IOwnerService<Comment>, CommentService>();
         services.AddScoped<IOwnerService<Form>, FormService>();
         services.AddScoped<IOwnerService<Template>, TemplateService>();
-        services.AddScoped<IOwnerService<Like>, LikeService>();
     }
 }

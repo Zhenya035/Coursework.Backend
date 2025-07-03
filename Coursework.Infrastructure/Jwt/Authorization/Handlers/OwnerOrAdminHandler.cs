@@ -37,7 +37,6 @@ public class OwnerOrAdminHandler<TEntry>(IOwnerService<TEntry> service) : Author
         if (typeof(TEntry) == typeof(Comment) && idParamName != "commentId") return;
         if (typeof(TEntry) == typeof(Form) && idParamName != "formId") return;
         if (typeof(TEntry) == typeof(Template) && idParamName != "templateId") return;
-        if (typeof(TEntry) == typeof(Like) && idParamName != "likeId") return;
         
         var userIdClaim = context.User.FindFirst("id");
         if(userIdClaim is null || string.IsNullOrEmpty(userIdClaim.Value))
